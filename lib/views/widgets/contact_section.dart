@@ -64,10 +64,10 @@ class ContactSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SectionTitle(
-                kicker: 'Get In Touch',
-                title: 'Let\'s Build Something Great',
-              ),
+              // const SectionTitle(
+              //   // kicker: 'Get In Touch',
+              //   // title: 'Let\'s Build Something Great',
+              // ),
               ScrollReveal(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 620),

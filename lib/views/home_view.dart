@@ -1,3 +1,4 @@
+import 'package:ajilesh_portfolio/views/widgets/hireme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -52,7 +53,9 @@ class HomeView extends StatelessWidget {
                   trackedSection('projects', const ProjectsSection()),
                   trackedSection('gallery', const GallerySection()),
                   trackedSection('education', const EducationSection()),
+                  trackedSection('hire', const HireMePage()),
                   trackedSection('contact', const ContactSection()),
+
                   const FooterWidget(),
                 ],
               ),

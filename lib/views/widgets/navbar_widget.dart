@@ -20,6 +20,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
     ['projects', 'Projects'],
     ['gallery', 'Gallery'],
     ['education', 'Education'],
+    ['hire', 'Hire Me'],
     ['contact', 'Contact'],
   ];
 

@@ -26,16 +26,16 @@ class AppData {
     linkedInUrl:
         'https://www.linkedin.com/in/ajilesh-v-?utm_source=share_via&utm_content=profile&utm_medium=member_ios',
     // TODO: replace with your real GitHub profile URL
-    githubUrl: 'https://github.com/ajilesh46',
+    githubUrl: 'https://github.com/Aji46',
     instagramUrl:
         'https://www.instagram.com/ajilesh_________?stkn=bHJ2dW12czV0NGFs&utm_source=qr',
-    leetcodeUrl: 'https://leetcode.com/',
+    leetcodeUrl: 'https://leetcode.com/u/Aji46/',
     profileImage: 'assets/images/wa4.jpeg',
     galleryImages: [
-      'assets/images/wa1.jpeg',
-      'assets/images/wa2.jpeg',
+      'assets/images/wa9.jpeg',
+      'assets/images/wa8.jpeg',
       'assets/images/wa3.jpeg',
-      'assets/images/wa5.jpeg',
+      'assets/images/wa7.jpeg',
     ],
   );
 
@@ -96,6 +96,12 @@ class AppData {
       duration: 'March 17, 2025 – October 31, 2025',
       referenceNote: 'Reference for verification: +91 94477 39393 (jabin.j@mediwarehms.com)',
     ),
+       ExperienceModel(
+      company: 'Sofftroniics',
+      role: 'Flutter Developer',
+      duration: ' June 08, 2026 – ',
+      // referenceNote: 'Reference for verification: +91 94477 39393 (jabin.j@mediwarehms.com)',
+    ),
   ];
 
   static const projects = <ProjectModel>[
@@ -113,10 +119,10 @@ class AppData {
         'Responsive UI with smooth transitions',
       ],
       techStack: ['Dart', 'Flutter', 'Firebase', 'Provider'],
-      liveLink: 'https://example.com/quokart-live',
+      liveLink: 'https://www.amazon.in/Brototype-Quokart/dp/B0DKNRMM8C/ref=sr_1_1?crid=1XBMDP0XSK1LS&dib=eyJ2IjoiMSJ9.YcHoh9kbZl1wQTBvvmbH2w.Ojml2Kdrg8WJzcvQcLGIWZdeR3aLUAbauPsGmwpwHnQ&dib_tag=se&keywords=quokart&qid=1733581268&s=mobile-apps&sprefix=%2Cmobile-apps%2C205&sr=1-1',
       extraLinks: {
-        'GitHub — User': 'https://github.com/ajilesh46/quokart-user',
-        'GitHub — Admin': 'https://github.com/ajilesh46/quokart-admin',
+        'GitHub — User': 'https://github.com/Aji46/Quick_deals_User_side',
+        'GitHub — Admin': 'https://github.com/Aji46/Quick-O-Deals-Admin',
       },
     ),
     ProjectModel(
@@ -131,8 +137,8 @@ class AppData {
         'User-friendly design ensuring confidentiality',
       ],
       techStack: ['Dart', 'Flutter', 'Hive', 'Firebase'],
-      liveLink: 'https://example.com/dropblood-live',
-      githubLink: 'https://github.com/ajilesh46/dropblood',
+      liveLink: 'https://www.amazon.in/dp/B0DPTG9PWM/ref=sr_1_1?dib=eyJ2IjoiMSJ9.IlqrkGzqBD17YwfREppDTQ._-l0uI1zFRyTZHojRNUEeB0moVHNweqXJmBcgddlMs4&dib_tag=se&keywords=DropBlood&qid=1733666054&s=mobile-apps&sr=1-1',
+      githubLink: 'https://github.com/Aji46/Reddrop_new',
     ),
     ProjectModel(
       title: 'Student Management Application (GetX Version)',
@@ -140,7 +146,7 @@ class AppData {
           'Student data management app leveraging GetX for enhanced state '
           'management.',
       techStack: ['Dart', 'Flutter', 'GetX'],
-      githubLink: 'https://github.com/ajilesh46/student-management-getx',
+      githubLink: 'https://github.com/Aji46/student_app_getx',
     ),
     ProjectModel(
       title: 'Student Management Application (Provider Version)',
@@ -148,7 +154,7 @@ class AppData {
           'Streamlined student data management using Flutter, Provider state '
           'management, and Hive database.',
       techStack: ['Dart', 'Flutter', 'Provider', 'Hive'],
-      githubLink: 'https://github.com/ajilesh46/student-management-provider',
+      githubLink: 'https://github.com/Aji46/student-app-provider',
     ),
     ProjectModel(
       title: 'Netflix Video Clone',
@@ -156,7 +162,7 @@ class AppData {
           'Built with Flutter and the TMDB API, featuring a responsive UI and '
           'movie search functionality.',
       techStack: ['Dart', 'Flutter', 'TMDB API'],
-      githubLink: 'https://github.com/ajilesh46/netflix-clone',
+      githubLink: 'https://github.com/Aji46/Netflix_clone',
     ),
   ];
 

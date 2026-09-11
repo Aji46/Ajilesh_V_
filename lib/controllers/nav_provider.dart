@@ -15,6 +15,7 @@ class NavProvider extends ChangeNotifier {
     'gallery': GlobalKey(),
     'education': GlobalKey(),
     'contact': GlobalKey(),
+    'hire': GlobalKey(),
   };
 
   String _activeSection = 'home';

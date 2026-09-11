@@ -83,8 +83,7 @@ class GallerySection extends StatelessWidget {
               ScrollReveal(
                 delay: const Duration(milliseconds: 200),
                 child: Text(
-                  'Tap a photo to view it full-screen. Replace these placeholders '
-                  'in assets/images/ with your own pictures any time.',
+                  'Tap a photo to view it full-screen.',
                   style: TextStyle(
                     color: AppColors.textMuted,
                     fontSize: 12.5,
