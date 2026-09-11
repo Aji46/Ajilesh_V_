@@ -1,0 +1,41 @@
+name: ajilesh_portfolio
+description: "Ajilesh V — Personal Portfolio Website (Flutter, MVC + Provider)"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # State management (MVC "Controller" layer)
+  provider: ^6.1.2
+
+  # Icons for skills / socials
+  font_awesome_flutter: ^11.0.0
+
+  # Nice animated widgets used across the site
+  animate_do: ^3.3.4
+
+  # Scroll-triggered visibility (for reveal-on-scroll animations)
+  visibility_detector: ^0.4.0+2
+
+  # Launching mailto / tel / social links
+  url_launcher: ^6.3.0
+
+  # Google-style fonts (optional, falls back gracefully)
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
