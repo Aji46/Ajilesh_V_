@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../controllers/nav_provider.dart';
+import '../controllers/theme_provider.dart';
 import 'widgets/navbar_widget.dart';
 import 'widgets/hero_section.dart';
 import 'widgets/about_section.dart';
@@ -24,6 +25,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nav = context.read<NavProvider>();
+    context.watch<ThemeProvider>();
 
     Widget trackedSection(String key, Widget child) {
       return VisibilityDetector(
@@ -46,17 +48,17 @@ class HomeView extends StatelessWidget {
               controller: nav.scrollController,
               child: Column(
                 children: [
-                  trackedSection('home', const HeroSection()),
-                  trackedSection('about', const AboutSection()),
-                  trackedSection('skills', const SkillsSection()),
-                  trackedSection('experience', const ExperienceSection()),
-                  trackedSection('projects', const ProjectsSection()),
-                  trackedSection('gallery', const GallerySection()),
-                  trackedSection('education', const EducationSection()),
-                  trackedSection('hire', const HireMePage()),
-                  trackedSection('contact', const ContactSection()),
+                  trackedSection('home', HeroSection()),
+                  trackedSection('about', AboutSection()),
+                  trackedSection('skills', SkillsSection()),
+                  trackedSection('experience', ExperienceSection()),
+                  trackedSection('projects', ProjectsSection()),
+                  trackedSection('gallery', GallerySection()),
+                  trackedSection('education', EducationSection()),
+                  trackedSection('hire', HireMePage()),
+                  trackedSection('contact', ContactSection()),
 
-                  const FooterWidget(),
+                  FooterWidget(),
                 ],
               ),
             ),

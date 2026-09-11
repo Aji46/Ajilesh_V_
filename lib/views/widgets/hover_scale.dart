@@ -43,7 +43,7 @@ class _HoverScaleState extends State<HoverScale> {
               boxShadow: _hovering
                   ? [
                       BoxShadow(
-                        color: widget.glowColor.withOpacity(0.35),
+                        color: widget.glowColor.withValues(alpha: 0.35),
                         blurRadius: 24,
                         spreadRadius: 1,
                       ),

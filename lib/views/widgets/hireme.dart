@@ -1075,7 +1075,7 @@ class _HireMePageState extends State<HireMePage> {
 
       filled: true,
 
-      fillColor: AppColors.background.withOpacity(0.55),
+      fillColor: AppColors.background.withValues(alpha: 0.55),
 
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 18,
@@ -1084,21 +1084,21 @@ class _HireMePageState extends State<HireMePage> {
 
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(
+        borderSide: BorderSide(
           color: AppColors.divider,
         ),
       ),
 
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(
+        borderSide: BorderSide(
           color: AppColors.divider,
         ),
       ),
 
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(
+        borderSide: BorderSide(
           color: AppColors.accent,
           width: 1.5,
         ),
@@ -1106,20 +1106,20 @@ class _HireMePageState extends State<HireMePage> {
 
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(
+        borderSide: BorderSide(
           color: Colors.redAccent,
         ),
       ),
 
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(
+        borderSide: BorderSide(
           color: Colors.redAccent,
           width: 1.5,
         ),
       ),
 
-      labelStyle: const TextStyle(
+      labelStyle: TextStyle(
         color: AppColors.textMuted,
       ),
     );
@@ -1144,7 +1144,7 @@ class _HireMePageState extends State<HireMePage> {
     return Container(
       width: double.infinity,
 
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: AppColors.heroGradient,
       ),
 
@@ -1234,7 +1234,7 @@ class _HireMePageState extends State<HireMePage> {
                     child: Text(
                       'Let\'s turn your idea into something great.',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 13,
                       ),
@@ -1271,20 +1271,20 @@ class _HireMePageState extends State<HireMePage> {
           ),
 
           decoration: BoxDecoration(
-            color: AppColors.accent.withOpacity(0.10),
+            color: AppColors.accent.withValues(alpha: 0.10),
 
             borderRadius:
                 BorderRadius.circular(30),
 
             border: Border.all(
-              color: AppColors.accent.withOpacity(0.25),
+              color: AppColors.accent.withValues(alpha: 0.25),
             ),
           ),
 
           child: Row(
             mainAxisSize: MainAxisSize.min,
 
-            children: const [
+            children: [
               Icon(
                 Icons.circle,
                 size: 8,
@@ -1341,7 +1341,7 @@ class _HireMePageState extends State<HireMePage> {
             textAlign:
                 mobile ? TextAlign.center : TextAlign.left,
 
-            style: const TextStyle(
+              style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 16,
               height: 1.7,
@@ -1392,13 +1392,13 @@ class _HireMePageState extends State<HireMePage> {
 
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accent.withOpacity(0.20),
+                  color: AppColors.accent.withValues(alpha: 0.20),
                   blurRadius: 25,
                 ),
               ],
             ),
 
-            child: const Icon(
+            child: Icon(
               Icons.rocket_launch_rounded,
               color: Colors.white,
               size: 28,
@@ -1407,7 +1407,7 @@ class _HireMePageState extends State<HireMePage> {
 
           const SizedBox(height: 25),
 
-          const Text(
+          Text(
             'Why Work With Me?',
             style: TextStyle(
               color: AppColors.textPrimary,
@@ -1418,7 +1418,7 @@ class _HireMePageState extends State<HireMePage> {
 
           const SizedBox(height: 14),
 
-          const Text(
+          Text(
             'I build modern, responsive and scalable '
             'applications with a strong focus on clean '
             'UI, good user experience and maintainable code.',
@@ -1492,7 +1492,7 @@ class _HireMePageState extends State<HireMePage> {
           height: 42,
 
           decoration: BoxDecoration(
-            color: AppColors.accent.withOpacity(0.10),
+            color: AppColors.accent.withValues(alpha: 0.10),
 
             borderRadius:
                 BorderRadius.circular(12),
@@ -1515,7 +1515,7 @@ class _HireMePageState extends State<HireMePage> {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -1526,7 +1526,7 @@ class _HireMePageState extends State<HireMePage> {
 
               Text(
                 subtitle,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 12,
                   height: 1.4,
@@ -1558,12 +1558,12 @@ class _HireMePageState extends State<HireMePage> {
             BorderRadius.circular(24),
 
         border: Border.all(
-          color: AppColors.accent.withOpacity(0.25),
+          color: AppColors.accent.withValues(alpha: 0.25),
         ),
 
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 30,
             offset: const Offset(0, 15),
           ),
@@ -1578,7 +1578,7 @@ class _HireMePageState extends State<HireMePage> {
               CrossAxisAlignment.start,
 
           children: [
-            const Text(
+            Text(
               'Tell Me About Your Project',
               style: TextStyle(
                 color: AppColors.textPrimary,
@@ -1589,7 +1589,7 @@ class _HireMePageState extends State<HireMePage> {
 
             const SizedBox(height: 7),
 
-            const Text(
+            Text(
               'I\'ll get back to you as soon as possible.',
               style: TextStyle(
                 color: AppColors.textMuted,
@@ -1603,9 +1603,7 @@ class _HireMePageState extends State<HireMePage> {
 
             TextFormField(
               controller: _nameController,
-
-              textInputAction:
-                  TextInputAction.next,
+              textInputAction: TextInputAction.next,
 
               decoration: _inputDecoration(
                 label: 'Your Name',
@@ -1709,7 +1707,7 @@ class _HireMePageState extends State<HireMePage> {
                       AppColors.accent,
 
                   disabledBackgroundColor:
-                      AppColors.accent.withOpacity(0.5),
+                      AppColors.accent.withValues(alpha: 0.5),
 
                   foregroundColor:
                       Colors.white,
@@ -1731,7 +1729,7 @@ class _HireMePageState extends State<HireMePage> {
               mainAxisAlignment:
                   MainAxisAlignment.center,
 
-              children: const [
+              children: [
                 Icon(
                   Icons.email_outlined,
                   size: 14,

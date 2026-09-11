@@ -65,9 +65,9 @@ class _HeroSectionState extends State<HeroSection>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.12),
+              color: AppColors.primary.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: AppColors.primary.withOpacity(0.4)),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.4)),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
@@ -89,7 +89,7 @@ class _HeroSectionState extends State<HeroSection>
           child: Text(
             'Hi, I\'m',
             textAlign: mobile ? TextAlign.center : TextAlign.start,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               color: AppColors.textSecondary,
               fontWeight: FontWeight.w500,
@@ -155,7 +155,7 @@ class _HeroSectionState extends State<HeroSection>
             child: Text(
               profile.summary,
               textAlign: mobile ? TextAlign.center : TextAlign.start,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15.5,
                 height: 1.7,
                 color: AppColors.textSecondary,
@@ -232,7 +232,7 @@ class _HeroSectionState extends State<HeroSection>
         horizontal: Responsive.pagePadding(context),
         vertical: mobile ? 60 : 110,
       ),
-      decoration: const BoxDecoration(gradient: AppColors.heroGradient),
+      decoration: BoxDecoration(gradient: AppColors.heroGradient),
       child: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
@@ -268,7 +268,7 @@ class _AvatarBlock extends StatelessWidget {
         gradient: AppColors.accentGradient,
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
+            color: AppColors.primary.withValues(alpha: 0.35),
             blurRadius: 60,
             spreadRadius: 6,
           ),
@@ -280,7 +280,7 @@ class _AvatarBlock extends StatelessWidget {
           child: Image.asset(
             imagePath,
             fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => const Icon(
+            errorBuilder: (_, __, ___) => Icon(
               Icons.person,
               size: 96,
               color: AppColors.textMuted,
@@ -355,7 +355,7 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
             boxShadow: _hover
                 ? [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.45),
+                      color: AppColors.primary.withValues(alpha: 0.45),
                       blurRadius: 22,
                       offset: const Offset(0, 8),
                     ),
@@ -364,7 +364,7 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
           ),
           child: Text(
             widget.label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w700,
               fontSize: 15,
@@ -406,7 +406,7 @@ class _OutlineButtonState extends State<_OutlineButton> {
           ),
           child: Text(
             widget.label,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.w700,
               fontSize: 15,

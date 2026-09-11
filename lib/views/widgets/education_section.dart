@@ -92,7 +92,7 @@ class _EducationColumn extends StatelessWidget {
                   children: [
                     Text(
                       education[i].qualification,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w700,
                         fontSize: 14.5,
@@ -101,7 +101,7 @@ class _EducationColumn extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       education[i].institution,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.accent,
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
@@ -110,7 +110,7 @@ class _EducationColumn extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       education[i].duration,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 11.5,
                       ),
@@ -156,7 +156,7 @@ class _CertificatesColumn extends StatelessWidget {
                   children: [
                     Text(
                       certificates[i].title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w700,
                         fontSize: 14.5,
@@ -165,7 +165,7 @@ class _CertificatesColumn extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       certificates[i].issuer,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.accent,
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
@@ -174,7 +174,7 @@ class _CertificatesColumn extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       certificates[i].duration,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 11.5,
                       ),
@@ -183,7 +183,7 @@ class _CertificatesColumn extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         'Cert #: ${certificates[i].certificateNumber}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textMuted,
                           fontSize: 11,
                         ),
@@ -222,7 +222,7 @@ class _ColumnHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           label,
-          style: const TextStyle(
+                        style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 17,
             fontWeight: FontWeight.w800,

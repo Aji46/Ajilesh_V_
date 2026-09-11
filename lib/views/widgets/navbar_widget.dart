@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../controllers/nav_provider.dart';
+import '../../controllers/theme_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/responsive.dart';
 
@@ -31,7 +32,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      color: AppColors.background.withOpacity(0.92),
+      color: AppColors.background.withValues(alpha: 0.92),
       child: Column(
         children: [
           Container(
@@ -39,7 +40,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
               horizontal: Responsive.pagePadding(context),
               vertical: 16,
             ),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(color: AppColors.divider, width: 1),
               ),
@@ -57,19 +58,25 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                           isActive: nav.activeSection == item[0],
                           onTap: () => nav.scrollToSection(item[0]),
                         ),
+                      const _ThemeToggle(),
                     ],
                   )
                 else
-                  IconButton(
-                    icon: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: Icon(
-                        nav.mobileMenuOpen ? Icons.close : Icons.menu,
-                        key: ValueKey(nav.mobileMenuOpen),
-                        color: AppColors.textPrimary,
+                  Row(
+                    children: [
+                      const _ThemeToggle(),
+                      IconButton(
+                        icon: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: Icon(
+                            nav.mobileMenuOpen ? Icons.close : Icons.menu,
+                            key: ValueKey(nav.mobileMenuOpen),
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        onPressed: nav.toggleMobileMenu,
                       ),
-                    ),
-                    onPressed: nav.toggleMobileMenu,
+                    ],
                   ),
               ],
             ),
@@ -82,7 +89,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                   ? Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(
                           bottom:
                               BorderSide(color: AppColors.divider, width: 1),
@@ -90,6 +97,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                       ),
                       child: Column(
                         children: [
+                          const SizedBox(height: 4),
                           for (final item in _items)
                             _NavLink(
                               label: item[1],
@@ -103,6 +111,23 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                   : const SizedBox.shrink(),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _ThemeToggle extends StatelessWidget {
+  const _ThemeToggle();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>();
+    return IconButton(
+      tooltip: theme.isDark ? 'Switch to light mode' : 'Switch to dark mode',
+      onPressed: theme.toggleTheme,
+      icon: Icon(
+        theme.isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+        color: AppColors.textPrimary,
       ),
     );
   }

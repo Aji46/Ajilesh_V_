@@ -6,7 +6,6 @@ import '../../utils/app_colors.dart';
 import '../../utils/responsive.dart';
 import 'hover_scale.dart';
 import 'scroll_reveal.dart';
-import 'section_title.dart';
 
 class ContactSection extends StatelessWidget {
   const ContactSection({super.key});
@@ -52,7 +51,7 @@ class ContactSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(gradient: AppColors.heroGradient),
+      decoration: BoxDecoration(gradient: AppColors.heroGradient),
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.pagePadding(context),
         vertical: 90,
@@ -71,7 +70,7 @@ class ContactSection extends StatelessWidget {
               ScrollReveal(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 620),
-                  child: const Text(
+                  child: Text(
                     'Open to freelance projects, full-time roles, and interesting '
                     'collaborations across Flutter development and cyber '
                     'security research. Reach out through any channel below.',
@@ -126,7 +125,7 @@ class ContactSection extends StatelessWidget {
                                   children: [
                                     Text(
                                       contactCards[i].$2,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.textMuted,
                                         fontSize: 11.5,
                                         fontWeight: FontWeight.w600,
@@ -136,7 +135,7 @@ class ContactSection extends StatelessWidget {
                                     Text(
                                       contactCards[i].$3,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.textPrimary,
                                         fontSize: 13,
                                         fontWeight: FontWeight.w700,

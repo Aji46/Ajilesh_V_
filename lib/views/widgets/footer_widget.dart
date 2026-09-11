@@ -14,7 +14,7 @@ class FooterWidget extends StatelessWidget {
         horizontal: Responsive.pagePadding(context),
         vertical: 24,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.background,
         border: Border(top: BorderSide(color: AppColors.divider)),
       ),
@@ -46,7 +46,7 @@ class _CopyrightText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       '© ${DateTime.now().year} Ajilesh V. All rights reserved.',
-      style: const TextStyle(color: AppColors.textMuted, fontSize: 12.5),
+      style: TextStyle(color: AppColors.textMuted, fontSize: 12.5),
     );
   }
 }
@@ -55,7 +55,7 @@ class _BuiltWithText extends StatelessWidget {
   const _BuiltWithText();
   @override
   Widget build(BuildContext context) {
-    return const Text(
+    return Text(
       'Built with Flutter 💙',
       style: TextStyle(color: AppColors.textMuted, fontSize: 12.5),
     );

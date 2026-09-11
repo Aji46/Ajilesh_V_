@@ -91,14 +91,14 @@ class _ProjectCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     project.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 19,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
-                const FaIcon(FontAwesomeIcons.diagramProject,
+                FaIcon(FontAwesomeIcons.diagramProject,
                     color: AppColors.accent, size: 18),
               ],
             ),
@@ -107,7 +107,7 @@ class _ProjectCard extends StatelessWidget {
               project.description,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 13.5,
                 height: 1.6,
@@ -126,7 +126,7 @@ class _ProjectCard extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(top: 5),
                               child: Icon(Icons.circle,
                                   size: 5, color: AppColors.primary),
@@ -135,7 +135,7 @@ class _ProjectCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 b,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppColors.textMuted,
                                   fontSize: 12,
                                   height: 1.5,
@@ -166,7 +166,7 @@ class _ProjectCard extends StatelessWidget {
                     ),
                     child: Text(
                       t,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.primary,
                         fontSize: 10.5,
                         fontWeight: FontWeight.w600,

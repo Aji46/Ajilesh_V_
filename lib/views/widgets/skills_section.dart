@@ -80,7 +80,7 @@ class SkillsSection extends StatelessWidget {
                             const SizedBox(height: 14),
                             Text(
                               cat.title,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.textPrimary,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 15,
@@ -104,7 +104,7 @@ class SkillsSection extends StatelessWidget {
                                       ),
                                       child: Text(
                                         item,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: AppColors.textSecondary,
                                           fontSize: 11.5,
                                         ),

@@ -82,7 +82,7 @@ class _TimelineItem extends StatelessWidget {
                   gradient: AppColors.accentGradient,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.5),
+                      color: AppColors.primary.withValues(alpha: 0.5),
                       blurRadius: 10,
                     ),
                   ],
@@ -125,7 +125,7 @@ class _TimelineItem extends StatelessWidget {
                     children: [
                       Text(
                         role,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 17,
                           fontWeight: FontWeight.w800,
@@ -135,12 +135,12 @@ class _TimelineItem extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.15),
+                          color: AppColors.primary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           duration,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.primary,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -152,7 +152,7 @@ class _TimelineItem extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     company,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.accent,
                       fontSize: 14.5,
                       fontWeight: FontWeight.w600,
@@ -162,7 +162,7 @@ class _TimelineItem extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text(
                       note!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 12.5,
                         fontStyle: FontStyle.italic,

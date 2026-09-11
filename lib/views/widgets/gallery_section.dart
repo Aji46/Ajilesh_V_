@@ -68,7 +68,7 @@ class GallerySection extends StatelessWidget {
                               errorBuilder: (_, __, ___) => Container(
                                 color: AppColors.surfaceLight,
                                 alignment: Alignment.center,
-                                child: const Icon(Icons.image,
+                                child: Icon(Icons.image,
                                     color: AppColors.textMuted, size: 30),
                               ),
                             ),
@@ -144,7 +144,7 @@ class _LightboxState extends State<_Lightbox> {
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
                     widget.images[_index],
-                    errorBuilder: (_, __, ___) => const Icon(
+                    errorBuilder: (_, __, ___) => Icon(
                       Icons.image,
                       color: AppColors.textMuted,
                       size: 80,

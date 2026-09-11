@@ -72,7 +72,7 @@ class _AboutText extends StatelessWidget {
       delay: const Duration(milliseconds: 100),
       child: Text(
         profile.summary,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.textSecondary,
           fontSize: 16,
           height: 1.9,
@@ -106,7 +106,7 @@ class _FactsGrid extends StatelessWidget {
                     width: 90,
                     child: Text(
                       facts[i].$1,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textMuted,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -116,7 +116,7 @@ class _FactsGrid extends StatelessWidget {
                   Expanded(
                     child: Text(
                       facts[i].$2,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.textPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -126,7 +126,7 @@ class _FactsGrid extends StatelessWidget {
                 ],
               ),
               if (i != facts.length - 1)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Divider(color: AppColors.divider, height: 1),
                 ),
