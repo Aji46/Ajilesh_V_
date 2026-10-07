@@ -20,10 +20,20 @@ class SkillsSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      color: AppColors.surface,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.surface,
+            AppColors.surfaceLight,
+            AppColors.surface,
+          ],
+        ),
+      ),
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.pagePadding(context),
-        vertical: 90,
+        vertical: 100,
       ),
       child: Center(
         child: ConstrainedBox(
@@ -44,77 +54,19 @@ class SkillsSection extends StatelessWidget {
                   crossAxisCount: columns,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
-                  mainAxisExtent: 210,
+                  mainAxisExtent: 220,
                 ),
                 itemBuilder: (context, i) {
                   final cat = categories[i];
                   return ScrollReveal(
-                    delay: Duration(milliseconds: 80 * (i % columns)),
+                    delay: Duration(milliseconds: 70 * (i % columns)),
                     child: HoverScale(
-                      glowColor: AppColors.secondary,
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          gradient: AppColors.cardGradient,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.divider),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 46,
-                              height: 46,
-                              decoration: BoxDecoration(
-                                gradient: AppColors.accentGradient,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: FaIcon(
-                                  cat.icon,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 14),
-                            Text(
-                              cat.title,
-                              style: TextStyle(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Expanded(
-                              child: Wrap(
-                                spacing: 6,
-                                runSpacing: 6,
-                                children: [
-                                  for (final item in cat.items)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.background,
-                                        borderRadius: BorderRadius.circular(8),
-                                        border:
-                                            Border.all(color: AppColors.divider),
-                                      ),
-                                      child: Text(
-                                        item,
-                                        style: TextStyle(
-                                          color: AppColors.textSecondary,
-                                          fontSize: 11.5,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                      glowColor: AppColors.primary,
+                      child: _SkillCard(
+                        title: cat.title,
+                        icon: cat.icon,
+                        items: cat.items,
+                        index: i,
                       ),
                     ),
                   );
@@ -122,6 +74,141 @@ class SkillsSection extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SkillCard extends StatefulWidget {
+  final String title;
+  final FaIconData icon;
+  final List<String> items;
+  final int index;
+  const _SkillCard({
+    required this.title,
+    required this.icon,
+    required this.items,
+    required this.index,
+  });
+
+  @override
+  State<_SkillCard> createState() => _SkillCardState();
+}
+
+class _SkillCardState extends State<_SkillCard>
+    with SingleTickerProviderStateMixin {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final grad = AppColors.spectrumPair(widget.index);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceLight,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: _hover
+                ? grad[0].withValues(alpha: 0.5)
+                : AppColors.divider,
+            width: _hover ? 1.5 : 1,
+          ),
+          boxShadow: _hover
+              ? [
+                  BoxShadow(
+                    color: grad[0].withValues(alpha: 0.25),
+                    blurRadius: 28,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : [],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Icon box with gradient ──────────────────────────────
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                gradient:
+                    LinearGradient(colors: grad),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: _hover
+                    ? [
+                        BoxShadow(
+                          color: grad[0].withValues(alpha: 0.45),
+                          blurRadius: 14,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : [],
+              ),
+              child: Center(
+                child: FaIcon(
+                  widget.icon,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+
+            // ── Title ───────────────────────────────────────────────
+            Text(
+              widget.title,
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: 14.5,
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // ── Tags ────────────────────────────────────────────────
+            Expanded(
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final item in widget.items)
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: _hover
+                            ? grad[0].withValues(alpha: 0.1)
+                            : AppColors.background,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: _hover
+                              ? grad[0].withValues(alpha: 0.4)
+                              : AppColors.divider,
+                        ),
+                      ),
+                      child: Text(
+                        item,
+                        style: TextStyle(
+                          color: _hover
+                              ? grad[0]
+                              : AppColors.textSecondary,
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

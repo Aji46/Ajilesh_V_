@@ -5,6 +5,7 @@ import '../../controllers/portfolio_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/responsive.dart';
 import 'scroll_reveal.dart';
+import 'section_photo_banner.dart';
 import 'section_title.dart';
 
 class ExperienceSection extends StatelessWidget {
@@ -31,6 +32,15 @@ class ExperienceSection extends StatelessWidget {
               const SectionTitle(
                 kicker: 'Career So Far',
                 title: 'Work Experience',
+              ),
+              const SectionPhotoBanner(
+                imagePath: 'assets/images/wa1.jpeg',
+                eyebrow: 'Career journey',
+                title: 'Learning through real work.',
+                description:
+                    'Each role adds new perspective to how I build and solve problems.',
+                imageAlignment: Alignment.topCenter,
+                fullHeightImage: true,
               ),
               for (int i = 0; i < experience.length; i++)
                 ScrollReveal(

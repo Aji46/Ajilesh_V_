@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import '../controllers/nav_provider.dart';
 import '../controllers/theme_provider.dart';
+import 'widgets/cursor_widget.dart';
 import 'widgets/navbar_widget.dart';
 import 'widgets/hero_section.dart';
 import 'widgets/about_section.dart';
@@ -14,6 +15,8 @@ import 'widgets/gallery_section.dart';
 import 'widgets/education_section.dart';
 import 'widgets/contact_section.dart';
 import 'widgets/footer_widget.dart';
+import 'widgets/portfolio_assistant.dart';
+import 'widgets/scroll_reveal.dart';
 
 /// VIEW LAYER (V in MVC)
 /// Composes every section, wraps each one in a VisibilityDetector so the
@@ -39,31 +42,35 @@ class HomeView extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      body: Column(
-        children: [
-          const NavbarWidget(),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: nav.scrollController,
-              child: Column(
-                children: [
-                  trackedSection('home', HeroSection()),
-                  trackedSection('about', AboutSection()),
-                  trackedSection('skills', SkillsSection()),
-                  trackedSection('experience', ExperienceSection()),
-                  trackedSection('projects', ProjectsSection()),
-                  trackedSection('gallery', GallerySection()),
-                  trackedSection('education', EducationSection()),
-                  trackedSection('hire', HireMePage()),
-                  trackedSection('contact', ContactSection()),
-
-                  FooterWidget(),
-                ],
+    return CustomCursorOverlay(
+      child: Scaffold(
+        floatingActionButton: const PortfolioAssistantButton(),
+        body: Column(
+          children: [
+            const NavbarWidget(),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: nav.scrollController,
+                child: Column(
+                  children: [
+                    trackedSection('home', HeroSection()),
+                    trackedSection('about', AboutSection()),
+                    trackedSection('skills', SkillsSection()),
+                    trackedSection('experience', ExperienceSection()),
+                    trackedSection('projects', ProjectsSection()),
+                    trackedSection('gallery', GallerySection()),
+                    trackedSection('education', EducationSection()),
+                    trackedSection('hire', HireMePage()),
+                    trackedSection('contact', ContactSection()),
+                    ScrollReveal(
+                      child: FooterWidget(),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

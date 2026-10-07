@@ -19,7 +19,8 @@ class GallerySection extends StatelessWidget {
     final images = context.watch<PortfolioProvider>().profile.galleryImages;
     final mobile = Responsive.isMobile(context);
     final tablet = Responsive.isTablet(context);
-    final columns = mobile ? 2 : (tablet ? 3 : 4);
+    final width = MediaQuery.sizeOf(context).width;
+    final columns = width < 380 ? 1 : (mobile ? 2 : (tablet ? 3 : 4));
 
     return Container(
       width: double.infinity,
@@ -171,8 +172,8 @@ class _LightboxState extends State<_Lightbox> {
                     icon: const Icon(Icons.chevron_left,
                         color: Colors.white, size: 36),
                     onPressed: () => setState(() {
-                      _index =
-                          (_index - 1 + widget.images.length) % widget.images.length;
+                      _index = (_index - 1 + widget.images.length) %
+                          widget.images.length;
                     }),
                   ),
                 ),

@@ -1,4 +1,3 @@
-
 // import 'package:ajilesh_portfolio/controllers/portfolio_provider.dart';
 // import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
@@ -918,6 +917,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../controllers/portfolio_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/responsive.dart';
+import 'scroll_reveal.dart';
 
 class HireMePage extends StatefulWidget {
   const HireMePage({super.key});
@@ -929,14 +929,11 @@ class HireMePage extends StatefulWidget {
 class _HireMePageState extends State<HireMePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController =
-      TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
-  final TextEditingController _emailController =
-      TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
-  final TextEditingController _messageController =
-      TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
 
   bool _sending = false;
 
@@ -966,8 +963,7 @@ class _HireMePageState extends State<HireMePage> {
     final emailUri = Uri(
       scheme: 'mailto',
       queryParameters: {
-        'subject':
-            'Hire request from ${_nameController.text.trim()}',
+        'subject': 'Hire request from ${_nameController.text.trim()}',
         'body': [
           'Name: ${_nameController.text.trim()}',
           'Email: ${_emailController.text.trim()}',
@@ -1067,35 +1063,28 @@ class _HireMePageState extends State<HireMePage> {
   }) {
     return InputDecoration(
       labelText: label,
-
       prefixIcon: Icon(
         icon,
         color: AppColors.textMuted,
       ),
-
       filled: true,
-
       fillColor: AppColors.background.withValues(alpha: 0.55),
-
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 18,
         vertical: 17,
       ),
-
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide(
           color: AppColors.divider,
         ),
       ),
-
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide(
           color: AppColors.divider,
         ),
       ),
-
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide(
@@ -1103,14 +1092,12 @@ class _HireMePageState extends State<HireMePage> {
           width: 1.5,
         ),
       ),
-
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide(
           color: Colors.redAccent,
         ),
       ),
-
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
         borderSide: BorderSide(
@@ -1118,7 +1105,6 @@ class _HireMePageState extends State<HireMePage> {
           width: 1.5,
         ),
       ),
-
       labelStyle: TextStyle(
         color: AppColors.textMuted,
       ),
@@ -1134,6 +1120,7 @@ class _HireMePageState extends State<HireMePage> {
     final portfolio = context.watch<PortfolioProvider>();
 
     final mobile = Responsive.isMobile(context);
+    final stackedLayout = MediaQuery.sizeOf(context).width < 900;
 
     // IMPORTANT:
     // No Scaffold here.
@@ -1143,36 +1130,33 @@ class _HireMePageState extends State<HireMePage> {
 
     return Container(
       width: double.infinity,
-
       decoration: BoxDecoration(
         gradient: AppColors.heroGradient,
       ),
-
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: Responsive.pagePadding(context),
             vertical: mobile ? 35 : 70,
           ),
-
           child: Center(
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 maxWidth: Responsive.maxContentWidth(context),
               ),
-
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ==================================================
                   // HEADER
                   // ==================================================
 
-                  _buildHeader(
-                    portfolio,
-                    mobile,
+                  ScrollReveal(
+                    delay: const Duration(milliseconds: 80),
+                    child: _buildHeader(
+                      portfolio,
+                      mobile,
+                    ),
                   ),
 
                   SizedBox(
@@ -1183,46 +1167,31 @@ class _HireMePageState extends State<HireMePage> {
                   // MAIN CONTENT
                   // ==================================================
 
-                  mobile
-                      ? Column(
-                          children: [
-                            _buildAboutCard(
-                              portfolio,
-                            ),
-
-                            const SizedBox(
-                              height: 25,
-                            ),
-
-                            _buildHireForm(
-                              portfolio,
-                            ),
-                          ],
-                        )
-                      : Row(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: _buildAboutCard(
-                                portfolio,
+                  ScrollReveal(
+                    delay: const Duration(milliseconds: 180),
+                    child: stackedLayout
+                        ? Column(
+                            children: [
+                              _buildAboutCard(portfolio),
+                              const SizedBox(height: 25),
+                              _buildHireForm(portfolio),
+                            ],
+                          )
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: _buildAboutCard(portfolio),
                               ),
-                            ),
-
-                            const SizedBox(
-                              width: 30,
-                            ),
-
-                            Expanded(
-                              flex: 6,
-                              child: _buildHireForm(
-                                portfolio,
+                              const SizedBox(width: 30),
+                              Expanded(
+                                flex: 6,
+                                child: _buildHireForm(portfolio),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
+                  ),
 
                   const SizedBox(height: 45),
 
@@ -1258,9 +1227,8 @@ class _HireMePageState extends State<HireMePage> {
     bool mobile,
   ) {
     return Column(
-      crossAxisAlignment: mobile
-          ? CrossAxisAlignment.center
-          : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          mobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
         // BADGE
 
@@ -1269,30 +1237,22 @@ class _HireMePageState extends State<HireMePage> {
             horizontal: 14,
             vertical: 8,
           ),
-
           decoration: BoxDecoration(
             color: AppColors.accent.withValues(alpha: 0.10),
-
-            borderRadius:
-                BorderRadius.circular(30),
-
+            borderRadius: BorderRadius.circular(30),
             border: Border.all(
               color: AppColors.accent.withValues(alpha: 0.25),
             ),
           ),
-
           child: Row(
             mainAxisSize: MainAxisSize.min,
-
             children: [
               Icon(
                 Icons.circle,
                 size: 8,
                 color: AppColors.accent,
               ),
-
               SizedBox(width: 8),
-
               Text(
                 'AVAILABLE FOR WORK',
                 style: TextStyle(
@@ -1312,10 +1272,7 @@ class _HireMePageState extends State<HireMePage> {
 
         Text(
           'Let\'s Work Together',
-
-          textAlign:
-              mobile ? TextAlign.center : TextAlign.left,
-
+          textAlign: mobile ? TextAlign.center : TextAlign.left,
           style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: mobile ? 34 : 48,
@@ -1332,16 +1289,12 @@ class _HireMePageState extends State<HireMePage> {
           constraints: const BoxConstraints(
             maxWidth: 700,
           ),
-
           child: Text(
             'Have an idea, project, or opportunity? '
             'Tell me about it and let\'s discuss how '
             'we can bring it to life.',
-
-            textAlign:
-                mobile ? TextAlign.center : TextAlign.left,
-
-              style: TextStyle(
+            textAlign: mobile ? TextAlign.center : TextAlign.left,
+            style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 16,
               height: 1.7,
@@ -1361,35 +1314,23 @@ class _HireMePageState extends State<HireMePage> {
   ) {
     return Container(
       width: double.infinity,
-
       padding: const EdgeInsets.all(30),
-
       decoration: BoxDecoration(
         gradient: AppColors.cardGradient,
-
-        borderRadius:
-            BorderRadius.circular(24),
-
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: AppColors.divider,
         ),
       ),
-
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
-
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 60,
             height: 60,
-
             decoration: BoxDecoration(
               gradient: AppColors.accentGradient,
-
-              borderRadius:
-                  BorderRadius.circular(17),
-
+              borderRadius: BorderRadius.circular(17),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.accent.withValues(alpha: 0.20),
@@ -1397,16 +1338,13 @@ class _HireMePageState extends State<HireMePage> {
                 ),
               ],
             ),
-
             child: Icon(
               Icons.rocket_launch_rounded,
               color: Colors.white,
               size: 28,
             ),
           ),
-
           const SizedBox(height: 25),
-
           Text(
             'Why Work With Me?',
             style: TextStyle(
@@ -1415,9 +1353,7 @@ class _HireMePageState extends State<HireMePage> {
               fontWeight: FontWeight.w800,
             ),
           ),
-
           const SizedBox(height: 14),
-
           Text(
             'I build modern, responsive and scalable '
             'applications with a strong focus on clean '
@@ -1428,41 +1364,31 @@ class _HireMePageState extends State<HireMePage> {
               height: 1.75,
             ),
           ),
-
           const SizedBox(height: 28),
-
           _buildService(
             Icons.flutter_dash,
             'Flutter Development',
             'Beautiful cross-platform applications.',
           ),
-
           const SizedBox(height: 18),
-
           _buildService(
             Icons.phone_android_rounded,
             'Mobile Applications',
             'Android, iOS and responsive experiences.',
           ),
-
           const SizedBox(height: 18),
-
           _buildService(
             Icons.language_rounded,
             'Web Applications',
             'Responsive Flutter web applications.',
           ),
-
           const SizedBox(height: 18),
-
           _buildService(
             Icons.api_rounded,
             'API Integration',
             'REST APIs and backend integration.',
           ),
-
           const SizedBox(height: 18),
-
           _buildService(
             Icons.code_rounded,
             'Clean Code',
@@ -1483,35 +1409,25 @@ class _HireMePageState extends State<HireMePage> {
     String subtitle,
   ) {
     return Row(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
-
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           width: 42,
           height: 42,
-
           decoration: BoxDecoration(
             color: AppColors.accent.withValues(alpha: 0.10),
-
-            borderRadius:
-                BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12),
           ),
-
           child: Icon(
             icon,
             size: 20,
             color: AppColors.accent,
           ),
         ),
-
         const SizedBox(width: 14),
-
         Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
-
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
@@ -1521,9 +1437,7 @@ class _HireMePageState extends State<HireMePage> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-
               const SizedBox(height: 4),
-
               Text(
                 subtitle,
                 style: TextStyle(
@@ -1548,19 +1462,13 @@ class _HireMePageState extends State<HireMePage> {
   ) {
     return Container(
       width: double.infinity,
-
       padding: const EdgeInsets.all(30),
-
       decoration: BoxDecoration(
         color: AppColors.background,
-
-        borderRadius:
-            BorderRadius.circular(24),
-
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: AppColors.accent.withValues(alpha: 0.25),
         ),
-
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.15),
@@ -1569,14 +1477,10 @@ class _HireMePageState extends State<HireMePage> {
           ),
         ],
       ),
-
       child: Form(
         key: _formKey,
-
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Tell Me About Your Project',
@@ -1604,14 +1508,11 @@ class _HireMePageState extends State<HireMePage> {
             TextFormField(
               controller: _nameController,
               textInputAction: TextInputAction.next,
-
               decoration: _inputDecoration(
                 label: 'Your Name',
                 icon: Icons.person_outline,
               ),
-
-              validator: (value) =>
-                  _required(
+              validator: (value) => _required(
                 value,
                 'your name',
               ),
@@ -1623,20 +1524,13 @@ class _HireMePageState extends State<HireMePage> {
 
             TextFormField(
               controller: _emailController,
-
-              keyboardType:
-                  TextInputType.emailAddress,
-
-              textInputAction:
-                  TextInputAction.next,
-
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
               decoration: _inputDecoration(
                 label: 'Your Email',
                 icon: Icons.email_outlined,
               ),
-
-              validator:
-                  _validateEmail,
+              validator: _validateEmail,
             ),
 
             const SizedBox(height: 16),
@@ -1645,22 +1539,16 @@ class _HireMePageState extends State<HireMePage> {
 
             TextFormField(
               controller: _messageController,
-
               minLines: 6,
               maxLines: 9,
-
-              textInputAction:
-                  TextInputAction.newline,
-
+              textInputAction: TextInputAction.newline,
               decoration: _inputDecoration(
                 label: 'Project details / Message',
                 icon: Icons.chat_bubble_outline,
               ).copyWith(
                 alignLabelWithHint: true,
               ),
-
-              validator: (value) =>
-                  _required(
+              validator: (value) => _required(
                 value,
                 'project details',
               ),
@@ -1673,21 +1561,17 @@ class _HireMePageState extends State<HireMePage> {
             SizedBox(
               width: double.infinity,
               height: 56,
-
               child: FilledButton.icon(
                 onPressed: _sending
                     ? null
                     : () => _sendMessage(
                           portfolio,
                         ),
-
                 icon: _sending
                     ? const SizedBox(
                         width: 19,
                         height: 19,
-
-                        child:
-                            CircularProgressIndicator(
+                        child: CircularProgressIndicator(
                           strokeWidth: 2,
                           color: Colors.white,
                         ),
@@ -1695,27 +1579,16 @@ class _HireMePageState extends State<HireMePage> {
                     : const Icon(
                         Icons.send_rounded,
                       ),
-
                 label: Text(
-                  _sending
-                      ? 'Opening Email...'
-                      : 'Send Message',
+                  _sending ? 'Opening Email...' : 'Send Message',
                 ),
-
                 style: FilledButton.styleFrom(
-                  backgroundColor:
-                      AppColors.accent,
-
+                  backgroundColor: AppColors.accent,
                   disabledBackgroundColor:
                       AppColors.accent.withValues(alpha: 0.5),
-
-                  foregroundColor:
-                      Colors.white,
-
-                  shape:
-                      RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(14),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
                   ),
                 ),
               ),
@@ -1726,18 +1599,14 @@ class _HireMePageState extends State<HireMePage> {
             // EMAIL INFORMATION
 
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.center,
-
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.email_outlined,
                   size: 14,
                   color: AppColors.textMuted,
                 ),
-
                 SizedBox(width: 7),
-
                 Flexible(
                   child: Text(
                     'The message will be sent through your email application.',

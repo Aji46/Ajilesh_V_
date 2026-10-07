@@ -18,7 +18,9 @@ class ProjectsSection extends StatelessWidget {
     final projects = portfolio.projects;
     final mobile = Responsive.isMobile(context);
     final tablet = Responsive.isTablet(context);
-    final columns = mobile ? 1 : (tablet ? 2 : 2);
+    final width = MediaQuery.sizeOf(context).width;
+    final columns = width < 900 ? 1 : 2;
+    final cardHeight = mobile ? 420.0 : (tablet ? 400.0 : 360.0);
 
     return Container(
       width: double.infinity,
@@ -46,7 +48,7 @@ class ProjectsSection extends StatelessWidget {
                   crossAxisCount: columns,
                   crossAxisSpacing: 22,
                   mainAxisSpacing: 22,
-                  mainAxisExtent: mobile ? 420 : 360,
+                  mainAxisExtent: cardHeight,
                 ),
                 itemBuilder: (context, i) {
                   return ScrollReveal(

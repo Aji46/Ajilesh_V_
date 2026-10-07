@@ -15,8 +15,8 @@ class ScrollReveal extends StatefulWidget {
     super.key,
     required this.child,
     this.delay = Duration.zero,
-    this.duration = const Duration(milliseconds: 700),
-    this.beginOffset = const Offset(0, 0.12),
+    this.duration = const Duration(milliseconds: 750),
+    this.beginOffset = const Offset(0, 0.1),
   });
 
   @override
@@ -40,7 +40,8 @@ class _ScrollRevealState extends State<ScrollReveal>
     _slide = Tween<Offset>(
       begin: widget.beginOffset,
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    ).animate(CurvedAnimation(
+        parent: _controller, curve: Curves.easeOutCubic));
   }
 
   @override
@@ -50,7 +51,7 @@ class _ScrollRevealState extends State<ScrollReveal>
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
-    if (!_hasAnimated && info.visibleFraction > 0.15) {
+    if (!_hasAnimated && info.visibleFraction > 0.12) {
       _hasAnimated = true;
       Future.delayed(widget.delay, () {
         if (mounted) _controller.forward();

@@ -28,6 +28,7 @@ dependencies:
 
   # Google-style fonts (optional, falls back gracefully)
   google_fonts: ^6.2.1
+  model_viewer_plus: ^1.10.0
 
 dev_dependencies:
   flutter_test:
