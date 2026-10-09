@@ -7,6 +7,7 @@ import '../../utils/responsive.dart';
 import 'hover_scale.dart';
 import 'scroll_reveal.dart';
 import 'section_title.dart';
+import 'photo_section_background.dart';
 
 class EducationSection extends StatelessWidget {
   const EducationSection({super.key});
@@ -18,44 +19,47 @@ class EducationSection extends StatelessWidget {
     final certificates = portfolio.certificates;
     final mobile = Responsive.isMobile(context);
 
-    return Container(
-      width: double.infinity,
-      color: AppColors.surface,
-      padding: EdgeInsets.symmetric(
-        horizontal: Responsive.pagePadding(context),
-        vertical: 90,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionTitle(
-                kicker: 'Background',
-                title: 'Education & Certificates',
-              ),
-              mobile
-                  ? Column(
-                      children: [
-                        _EducationColumn(education: education),
-                        const SizedBox(height: 40),
-                        _CertificatesColumn(certificates: certificates),
-                      ],
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: _EducationColumn(education: education)),
-                        const SizedBox(width: 40),
-                        Expanded(
-                            child: _CertificatesColumn(
-                                certificates: certificates)),
-                      ],
-                    ),
-            ],
+    return PhotoSectionBackground(
+      imagePath: 'assets/images/wa9.jpeg',
+      alignment: Alignment.topCenter,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: Responsive.pagePadding(context),
+          vertical: 90,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionTitle(
+                  kicker: 'Background',
+                  title: 'Education & Certificates',
+                ),
+                mobile
+                    ? Column(
+                        children: [
+                          _EducationColumn(education: education),
+                          const SizedBox(height: 40),
+                          _CertificatesColumn(certificates: certificates),
+                        ],
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: _EducationColumn(education: education)),
+                          const SizedBox(width: 40),
+                          Expanded(
+                              child: _CertificatesColumn(
+                                  certificates: certificates)),
+                        ],
+                      ),
+              ],
+            ),
           ),
         ),
       ),
@@ -72,7 +76,8 @@ class _EducationColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _ColumnHeader(icon: FontAwesomeIcons.graduationCap, label: 'Education'),
+        const _ColumnHeader(
+            icon: FontAwesomeIcons.graduationCap, label: 'Education'),
         const SizedBox(height: 18),
         for (int i = 0; i < education.length; i++)
           ScrollReveal(
@@ -222,7 +227,7 @@ class _ColumnHeader extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           label,
-                        style: TextStyle(
+          style: TextStyle(
             color: AppColors.textPrimary,
             fontSize: 17,
             fontWeight: FontWeight.w800,

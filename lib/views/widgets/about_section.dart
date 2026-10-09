@@ -6,6 +6,7 @@ import '../../utils/responsive.dart';
 import 'scroll_reveal.dart';
 import 'section_photo_banner.dart';
 import 'section_title.dart';
+import 'photo_section_background.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -32,62 +33,66 @@ class AboutSection extends StatelessWidget {
       ('Based in', 'Kerala, India'),
     ];
 
-    return Container(
-      width: double.infinity,
-      color: AppColors.background,
-      padding: EdgeInsets.symmetric(
-        horizontal: Responsive.pagePadding(context),
-        vertical: 100,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionTitle(kicker: 'About Me', title: 'Who I Am'),
-              const SectionPhotoBanner(
-                imagePath: 'assets/images/wa8.jpeg',
-                eyebrow: 'Life in frames',
-                title: 'Curiosity goes beyond the screen.',
-                description: 'A few moments from outside the editor.',
-                imageAlignment: Alignment.topCenter,
-              ),
+    return PhotoSectionBackground(
+      imagePath: 'assets/images/wa4.jpeg',
+      alignment: Alignment.topCenter,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: Responsive.pagePadding(context),
+          vertical: 100,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionTitle(kicker: 'About Me', title: 'Who I Am'),
+                const SectionPhotoBanner(
+                  imagePath: 'assets/images/wa8.jpeg',
+                  eyebrow: 'Life in frames',
+                  title: 'Curiosity goes beyond the screen.',
+                  description: 'A few moments from outside the editor.',
+                  imageAlignment: Alignment.topCenter,
+                ),
 
-              // ── Stats row ────────────────────────────────────────────
-              ScrollReveal(
-                delay: const Duration(milliseconds: 100),
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 40),
-                  child: Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    children: stats
-                        .map((s) => _StatCard(value: s.$1, label: s.$2))
-                        .toList(),
+                // ── Stats row ────────────────────────────────────────────
+                ScrollReveal(
+                  delay: const Duration(milliseconds: 100),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 40),
+                    child: Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: stats
+                          .map((s) => _StatCard(value: s.$1, label: s.$2))
+                          .toList(),
+                    ),
                   ),
                 ),
-              ),
 
-              // ── Content row ──────────────────────────────────────────
-              mobile
-                  ? Column(
-                      children: [
-                        _AboutText(profile: profile),
-                        const SizedBox(height: 30),
-                        _FactsGrid(facts: facts),
-                      ],
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(flex: 6, child: _AboutText(profile: profile)),
-                        const SizedBox(width: 50),
-                        Expanded(flex: 5, child: _FactsGrid(facts: facts)),
-                      ],
-                    ),
-            ],
+                // ── Content row ──────────────────────────────────────────
+                mobile
+                    ? Column(
+                        children: [
+                          _AboutText(profile: profile),
+                          const SizedBox(height: 30),
+                          _FactsGrid(facts: facts),
+                        ],
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 6, child: _AboutText(profile: profile)),
+                          const SizedBox(width: 50),
+                          Expanded(flex: 5, child: _FactsGrid(facts: facts)),
+                        ],
+                      ),
+              ],
+            ),
           ),
         ),
       ),

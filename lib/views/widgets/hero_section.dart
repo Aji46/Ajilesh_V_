@@ -22,6 +22,7 @@ class _HeroSectionState extends State<HeroSection>
   late final AnimationController _particleController;
   late final AnimationController _glowController;
   late final AnimationController _ringController;
+  late final AnimationController _cameraController;
 
   final List<String> _roles = const [
     'Flutter Developer',
@@ -54,6 +55,11 @@ class _HeroSectionState extends State<HeroSection>
       duration: const Duration(seconds: 6),
     )..repeat();
 
+    _cameraController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 28),
+    )..repeat(reverse: true);
+
     _cycleRoles();
   }
 
@@ -71,6 +77,7 @@ class _HeroSectionState extends State<HeroSection>
     _particleController.dispose();
     _glowController.dispose();
     _ringController.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
@@ -262,12 +269,23 @@ class _HeroSectionState extends State<HeroSection>
         children: [
           // ── Full-width banner background image ─────────────────────
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/wa9.jpeg',
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-              errorBuilder: (_, __, ___) => Container(
-                decoration: BoxDecoration(gradient: AppColors.heroGradient),
+            child: ClipRect(
+              child: AnimatedBuilder(
+                animation: _cameraController,
+                builder: (context, child) => Transform.scale(
+                  scale: mobile
+                      ? 1.02 + _cameraController.value * 0.06
+                      : 1.04 + _cameraController.value * 0.12,
+                  child: child,
+                ),
+                child: Image.asset(
+                  'assets/images/wa8.jpeg',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  errorBuilder: (_, __, ___) => Container(
+                    decoration: BoxDecoration(gradient: AppColors.heroGradient),
+                  ),
+                ),
               ),
             ),
           ),
@@ -280,9 +298,9 @@ class _HeroSectionState extends State<HeroSection>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Colors.black.withValues(alpha: 0.97),
-                    Colors.black.withValues(alpha: 0.88),
-                    Colors.black.withValues(alpha: 0.55),
+                    const Color(0xFF10070D).withValues(alpha: 0.94),
+                    const Color(0xFF35121E).withValues(alpha: 0.76),
+                    const Color(0xFF7A2632).withValues(alpha: 0.34),
                   ],
                 ),
               ),
@@ -292,7 +310,7 @@ class _HeroSectionState extends State<HeroSection>
           // ── RGB mesh + dot pattern ───────────────────────────────
           const Positioned.fill(
             child: IgnorePointer(
-              child: RgbMeshOverlay(strength: 1.0),
+              child: RgbMeshOverlay(strength: 0.38),
             ),
           ),
 

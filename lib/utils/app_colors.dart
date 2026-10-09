@@ -13,21 +13,21 @@ class AppColors {
   static Color get surfaceLight =>
       _dark ? const Color(0xFF111111) : const Color(0xFFEAF0F8);
 
-  static const Color primary = Color(0xFF00B4D8);
-  static const Color secondary = Color(0xFF6C3CE9);
-  static const Color accent = Color(0xFF00F5A0);
+  static const Color primary = Color(0xFFFF4F83);
+  static const Color secondary = Color(0xFFFF7957);
+  static const Color accent = Color(0xFFFFC857);
 
   /// Evenly spaced spectrum for shimmer lines and accents (loops at end).
   static const List<Color> rgbSpectrum = [
-    Color(0xFF2563EB),
-    Color(0xFF06B6D4),
-    Color(0xFF10B981),
-    Color(0xFFEAB308),
-    Color(0xFFF97316),
-    Color(0xFFEF4444),
-    Color(0xFFEC4899),
-    Color(0xFF8B5CF6),
-    Color(0xFF2563EB),
+    Color(0xFFFF4F83),
+    Color(0xFFFF596B),
+    Color(0xFFFF7957),
+    Color(0xFFFF9B4A),
+    Color(0xFFFFC857),
+    Color(0xFFFF9850),
+    Color(0xFFEF6682),
+    Color(0xFFB94E84),
+    Color(0xFFFF4F83),
   ];
 
   static const List<double> rgbSpectrumStops = [
@@ -86,12 +86,11 @@ class AppColors {
     end: Alignment.centerRight,
     colors: [
       primary,
-      Color(0xFF3B82F6),
       secondary,
-      Color(0xFFEC4899),
+      Color(0xFFFF9B4A),
       accent,
     ],
-    stops: [0.0, 0.28, 0.52, 0.76, 1.0],
+    stops: [0.0, 0.38, 0.68, 1.0],
   );
 
   static LinearGradient get cardGradient => LinearGradient(

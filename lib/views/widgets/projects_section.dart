@@ -8,6 +8,7 @@ import '../../utils/responsive.dart';
 import 'hover_scale.dart';
 import 'scroll_reveal.dart';
 import 'section_title.dart';
+import 'photo_section_background.dart';
 
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
@@ -22,45 +23,48 @@ class ProjectsSection extends StatelessWidget {
     final columns = width < 900 ? 1 : 2;
     final cardHeight = mobile ? 420.0 : (tablet ? 400.0 : 360.0);
 
-    return Container(
-      width: double.infinity,
-      color: AppColors.surface,
-      padding: EdgeInsets.symmetric(
-        horizontal: Responsive.pagePadding(context),
-        vertical: 90,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionTitle(
-                kicker: 'Selected Work',
-                title: 'Featured Projects',
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: projects.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columns,
-                  crossAxisSpacing: 22,
-                  mainAxisSpacing: 22,
-                  mainAxisExtent: cardHeight,
+    return PhotoSectionBackground(
+      imagePath: 'assets/images/wa5.jpeg',
+      alignment: Alignment.topCenter,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: Responsive.pagePadding(context),
+          vertical: 90,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionTitle(
+                  kicker: 'Selected Work',
+                  title: 'Featured Projects',
                 ),
-                itemBuilder: (context, i) {
-                  return ScrollReveal(
-                    delay: Duration(milliseconds: 100 * i),
-                    child: _ProjectCard(
-                      project: projects[i],
-                      onLink: portfolio.launchUrlString,
-                    ),
-                  );
-                },
-              ),
-            ],
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: projects.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: 22,
+                    mainAxisSpacing: 22,
+                    mainAxisExtent: cardHeight,
+                  ),
+                  itemBuilder: (context, i) {
+                    return ScrollReveal(
+                      delay: Duration(milliseconds: 100 * i),
+                      child: _ProjectCard(
+                        project: projects[i],
+                        onLink: portfolio.launchUrlString,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -15,7 +15,7 @@ class FooterWidget extends StatelessWidget {
         vertical: 24,
       ),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Colors.transparent,
         border: Border(top: BorderSide(color: AppColors.divider)),
       ),
       child: Center(

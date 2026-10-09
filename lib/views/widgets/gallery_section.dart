@@ -6,6 +6,7 @@ import '../../utils/responsive.dart';
 import 'hover_scale.dart';
 import 'scroll_reveal.dart';
 import 'section_title.dart';
+import 'photo_section_background.dart';
 
 /// "A few more images of me" — an animated photo gallery with a
 /// hero-animation lightbox. Swap the placeholder files in
@@ -22,77 +23,80 @@ class GallerySection extends StatelessWidget {
     final width = MediaQuery.sizeOf(context).width;
     final columns = width < 380 ? 1 : (mobile ? 2 : (tablet ? 3 : 4));
 
-    return Container(
-      width: double.infinity,
-      color: AppColors.background,
-      padding: EdgeInsets.symmetric(
-        horizontal: Responsive.pagePadding(context),
-        vertical: 90,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionTitle(kicker: 'Snapshots', title: 'Gallery'),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: images.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columns,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.85,
-                ),
-                itemBuilder: (context, i) {
-                  final tag = 'gallery_$i';
-                  return ScrollReveal(
-                    delay: Duration(milliseconds: 80 * i),
-                    child: HoverScale(
-                      scale: 1.05,
-                      onTap: () => _openLightbox(context, images, i, tag),
-                      child: Hero(
-                        tag: tag,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.divider),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Image.asset(
-                              images[i],
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                color: AppColors.surfaceLight,
-                                alignment: Alignment.center,
-                                child: Icon(Icons.image,
-                                    color: AppColors.textMuted, size: 30),
+    return PhotoSectionBackground(
+      imagePath: 'assets/images/wa1.jpeg',
+      alignment: Alignment.topCenter,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: Responsive.pagePadding(context),
+          vertical: 90,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionTitle(kicker: 'Snapshots', title: 'Gallery'),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: images.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemBuilder: (context, i) {
+                    final tag = 'gallery_$i';
+                    return ScrollReveal(
+                      delay: Duration(milliseconds: 80 * i),
+                      child: HoverScale(
+                        scale: 1.05,
+                        onTap: () => _openLightbox(context, images, i, tag),
+                        child: Hero(
+                          tag: tag,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.divider),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Image.asset(
+                                images[i],
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Container(
+                                  color: AppColors.surfaceLight,
+                                  alignment: Alignment.center,
+                                  child: Icon(Icons.image,
+                                      color: AppColors.textMuted, size: 30),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 14),
+                ScrollReveal(
+                  delay: const Duration(milliseconds: 200),
+                  child: Text(
+                    'Tap a photo to view it full-screen.',
+                    style: TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 12.5,
+                      fontStyle: FontStyle.italic,
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 14),
-              ScrollReveal(
-                delay: const Duration(milliseconds: 200),
-                child: Text(
-                  'Tap a photo to view it full-screen.',
-                  style: TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 12.5,
-                    fontStyle: FontStyle.italic,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

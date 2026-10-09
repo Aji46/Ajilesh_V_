@@ -917,6 +917,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../controllers/portfolio_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/responsive.dart';
+import 'photo_section_background.dart';
 import 'scroll_reveal.dart';
 
 class HireMePage extends StatefulWidget {
@@ -1128,88 +1129,89 @@ class _HireMePageState extends State<HireMePage> {
     //
     // HomeView already provides the main scrolling area.
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: AppColors.heroGradient,
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Responsive.pagePadding(context),
-            vertical: mobile ? 35 : 70,
-          ),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: Responsive.maxContentWidth(context),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ==================================================
-                  // HEADER
-                  // ==================================================
+    return PhotoSectionBackground(
+      imagePath: 'assets/images/wa8.jpeg',
+      alignment: Alignment.topCenter,
+      child: SizedBox(
+        width: double.infinity,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: Responsive.pagePadding(context),
+              vertical: mobile ? 35 : 70,
+            ),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: Responsive.maxContentWidth(context),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ==================================================
+                    // HEADER
+                    // ==================================================
 
-                  ScrollReveal(
-                    delay: const Duration(milliseconds: 80),
-                    child: _buildHeader(
-                      portfolio,
-                      mobile,
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: mobile ? 35 : 55,
-                  ),
-
-                  // ==================================================
-                  // MAIN CONTENT
-                  // ==================================================
-
-                  ScrollReveal(
-                    delay: const Duration(milliseconds: 180),
-                    child: stackedLayout
-                        ? Column(
-                            children: [
-                              _buildAboutCard(portfolio),
-                              const SizedBox(height: 25),
-                              _buildHireForm(portfolio),
-                            ],
-                          )
-                        : Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 4,
-                                child: _buildAboutCard(portfolio),
-                              ),
-                              const SizedBox(width: 30),
-                              Expanded(
-                                flex: 6,
-                                child: _buildHireForm(portfolio),
-                              ),
-                            ],
-                          ),
-                  ),
-
-                  const SizedBox(height: 45),
-
-                  // ==================================================
-                  // FOOTER MESSAGE
-                  // ==================================================
-
-                  Center(
-                    child: Text(
-                      'Let\'s turn your idea into something great.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 13,
+                    ScrollReveal(
+                      delay: const Duration(milliseconds: 80),
+                      child: _buildHeader(
+                        portfolio,
+                        mobile,
                       ),
                     ),
-                  ),
-                ],
+
+                    SizedBox(
+                      height: mobile ? 35 : 55,
+                    ),
+
+                    // ==================================================
+                    // MAIN CONTENT
+                    // ==================================================
+
+                    ScrollReveal(
+                      delay: const Duration(milliseconds: 180),
+                      child: stackedLayout
+                          ? Column(
+                              children: [
+                                _buildAboutCard(portfolio),
+                                const SizedBox(height: 25),
+                                _buildHireForm(portfolio),
+                              ],
+                            )
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: _buildAboutCard(portfolio),
+                                ),
+                                const SizedBox(width: 30),
+                                Expanded(
+                                  flex: 6,
+                                  child: _buildHireForm(portfolio),
+                                ),
+                              ],
+                            ),
+                    ),
+
+                    const SizedBox(height: 45),
+
+                    // ==================================================
+                    // FOOTER MESSAGE
+                    // ==================================================
+
+                    Center(
+                      child: Text(
+                        'Let\'s turn your idea into something great.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.textMuted,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

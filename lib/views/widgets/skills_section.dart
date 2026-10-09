@@ -7,6 +7,7 @@ import '../../utils/responsive.dart';
 import 'hover_scale.dart';
 import 'scroll_reveal.dart';
 import 'section_title.dart';
+import 'photo_section_background.dart';
 
 class SkillsSection extends StatelessWidget {
   const SkillsSection({super.key});
@@ -18,61 +19,54 @@ class SkillsSection extends StatelessWidget {
     final tablet = Responsive.isTablet(context);
     final columns = mobile ? 1 : (tablet ? 2 : 4);
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.surface,
-            AppColors.surfaceLight,
-            AppColors.surface,
-          ],
+    return PhotoSectionBackground(
+      imagePath: 'assets/images/wa7.jpeg',
+      alignment: Alignment.topCenter,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(
+          horizontal: Responsive.pagePadding(context),
+          vertical: 100,
         ),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: Responsive.pagePadding(context),
-        vertical: 100,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SectionTitle(
-                kicker: 'What I Work With',
-                title: 'Skills & Toolbox',
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: categories.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columns,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  mainAxisExtent: 220,
+        child: Center(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(maxWidth: Responsive.maxContentWidth(context)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionTitle(
+                  kicker: 'What I Work With',
+                  title: 'Skills & Toolbox',
                 ),
-                itemBuilder: (context, i) {
-                  final cat = categories[i];
-                  return ScrollReveal(
-                    delay: Duration(milliseconds: 70 * (i % columns)),
-                    child: HoverScale(
-                      glowColor: AppColors.primary,
-                      child: _SkillCard(
-                        title: cat.title,
-                        icon: cat.icon,
-                        items: cat.items,
-                        index: i,
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: categories.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    mainAxisExtent: 220,
+                  ),
+                  itemBuilder: (context, i) {
+                    final cat = categories[i];
+                    return ScrollReveal(
+                      delay: Duration(milliseconds: 70 * (i % columns)),
+                      child: HoverScale(
+                        glowColor: AppColors.primary,
+                        child: _SkillCard(
+                          title: cat.title,
+                          icon: cat.icon,
+                          items: cat.items,
+                          index: i,
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -114,9 +108,7 @@ class _SkillCardState extends State<_SkillCard>
           color: AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: _hover
-                ? grad[0].withValues(alpha: 0.5)
-                : AppColors.divider,
+            color: _hover ? grad[0].withValues(alpha: 0.5) : AppColors.divider,
             width: _hover ? 1.5 : 1,
           ),
           boxShadow: _hover
@@ -138,8 +130,7 @@ class _SkillCardState extends State<_SkillCard>
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                gradient:
-                    LinearGradient(colors: grad),
+                gradient: LinearGradient(colors: grad),
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: _hover
                     ? [
@@ -197,9 +188,7 @@ class _SkillCardState extends State<_SkillCard>
                       child: Text(
                         item,
                         style: TextStyle(
-                          color: _hover
-                              ? grad[0]
-                              : AppColors.textSecondary,
+                          color: _hover ? grad[0] : AppColors.textSecondary,
                           fontSize: 11.5,
                           fontWeight: FontWeight.w500,
                         ),

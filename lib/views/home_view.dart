@@ -17,6 +17,7 @@ import 'widgets/contact_section.dart';
 import 'widgets/footer_widget.dart';
 import 'widgets/portfolio_assistant.dart';
 import 'widgets/scroll_reveal.dart';
+import 'widgets/photo_section_background.dart';
 
 /// VIEW LAYER (V in MVC)
 /// Composes every section, wraps each one in a VisibilityDetector so the
@@ -63,7 +64,11 @@ class HomeView extends StatelessWidget {
                     trackedSection('hire', HireMePage()),
                     trackedSection('contact', ContactSection()),
                     ScrollReveal(
-                      child: FooterWidget(),
+                      child: PhotoSectionBackground(
+                        imagePath: 'assets/images/wa4.jpeg',
+                        alignment: Alignment.topCenter,
+                        child: FooterWidget(),
+                      ),
                     ),
                   ],
                 ),
