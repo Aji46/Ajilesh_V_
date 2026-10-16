@@ -22,7 +22,6 @@ class _HeroSectionState extends State<HeroSection>
   late final AnimationController _particleController;
   late final AnimationController _glowController;
   late final AnimationController _ringController;
-  late final AnimationController _cameraController;
 
   final List<String> _roles = const [
     'Flutter Developer',
@@ -55,11 +54,6 @@ class _HeroSectionState extends State<HeroSection>
       duration: const Duration(seconds: 6),
     )..repeat();
 
-    _cameraController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 28),
-    )..repeat(reverse: true);
-
     _cycleRoles();
   }
 
@@ -77,7 +71,6 @@ class _HeroSectionState extends State<HeroSection>
     _particleController.dispose();
     _glowController.dispose();
     _ringController.dispose();
-    _cameraController.dispose();
     super.dispose();
   }
 
@@ -87,7 +80,6 @@ class _HeroSectionState extends State<HeroSection>
     final nav = context.read<NavProvider>();
     final profile = portfolio.profile;
     final mobile = Responsive.isMobile(context);
-    final stackedLayout = MediaQuery.sizeOf(context).width < 1200;
     final size = MediaQuery.of(context).size;
 
     final textColumn = Column(
@@ -269,23 +261,12 @@ class _HeroSectionState extends State<HeroSection>
         children: [
           // ── Full-width banner background image ─────────────────────
           Positioned.fill(
-            child: ClipRect(
-              child: AnimatedBuilder(
-                animation: _cameraController,
-                builder: (context, child) => Transform.scale(
-                  scale: mobile
-                      ? 1.02 + _cameraController.value * 0.06
-                      : 1.04 + _cameraController.value * 0.12,
-                  child: child,
-                ),
-                child: Image.asset(
-                  'assets/images/wa8.jpeg',
-                  fit: BoxFit.cover,
-                  alignment: Alignment.topCenter,
-                  errorBuilder: (_, __, ___) => Container(
-                    decoration: BoxDecoration(gradient: AppColors.heroGradient),
-                  ),
-                ),
+            child: Image.asset(
+              'assets/images/wa9.jpeg',
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+              errorBuilder: (_, __, ___) => Container(
+                decoration: BoxDecoration(gradient: AppColors.heroGradient),
               ),
             ),
           ),
@@ -298,9 +279,9 @@ class _HeroSectionState extends State<HeroSection>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    const Color(0xFF10070D).withValues(alpha: 0.94),
-                    const Color(0xFF35121E).withValues(alpha: 0.76),
-                    const Color(0xFF7A2632).withValues(alpha: 0.34),
+                    const Color(0xFF0A0E1A).withValues(alpha: 0.97),
+                    const Color(0xFF0A0E1A).withValues(alpha: 0.88),
+                    const Color(0xFF0A0E1A).withValues(alpha: 0.55),
                   ],
                 ),
               ),
@@ -310,7 +291,7 @@ class _HeroSectionState extends State<HeroSection>
           // ── RGB mesh + dot pattern ───────────────────────────────
           const Positioned.fill(
             child: IgnorePointer(
-              child: RgbMeshOverlay(strength: 0.38),
+              child: RgbMeshOverlay(strength: 1.0),
             ),
           ),
 
@@ -327,7 +308,7 @@ class _HeroSectionState extends State<HeroSection>
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black,
+                    const Color(0xFF0A0E1A),
                   ],
                 ),
               ),
@@ -357,7 +338,7 @@ class _HeroSectionState extends State<HeroSection>
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                     maxWidth: Responsive.maxContentWidth(context)),
-                child: stackedLayout
+                child: mobile
                     ? Column(children: [
                         avatar,
                         const SizedBox(height: 44),
@@ -605,10 +586,7 @@ class _AvatarBlockState extends State<_AvatarBlock>
 
   @override
   Widget build(BuildContext context) {
-    final availableWidth =
-        MediaQuery.sizeOf(context).width - Responsive.pagePadding(context) * 2;
-    final maxSize = Responsive.isMobile(context) ? 230.0 : 330.0;
-    final sz = (availableWidth - 52).clamp(140.0, maxSize).toDouble();
+    final sz = Responsive.isMobile(context) ? 230.0 : 330.0;
 
     return MouseRegion(
       key: _key,
@@ -707,7 +685,7 @@ class _AvatarBlockState extends State<_AvatarBlock>
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      // ── Portrait ──────────────────────────────────
+                      // ── Photo ─────────────────────────────────────
                       Image.asset(
                         widget.imagePath,
                         fit: BoxFit.cover,

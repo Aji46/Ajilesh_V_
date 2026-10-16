@@ -28,7 +28,7 @@ class _NavbarWidgetState extends State<NavbarWidget> {
   @override
   Widget build(BuildContext context) {
     final nav = context.watch<NavProvider>();
-    final mobile = MediaQuery.sizeOf(context).width < 1280;
+    final mobile = Responsive.isMobile(context) || Responsive.isTablet(context);
 
     return Container(
       decoration: BoxDecoration(
@@ -114,8 +114,8 @@ class _NavbarWidgetState extends State<NavbarWidget> {
                           ],
                         ),
                         border: Border(
-                          bottom:
-                              BorderSide(color: AppColors.divider, width: 1),
+                          bottom: BorderSide(
+                              color: AppColors.divider, width: 1),
                         ),
                       ),
                       child: Column(
@@ -153,7 +153,8 @@ class _ThemeToggle extends StatelessWidget {
         color: AppColors.surfaceLight,
       ),
       child: IconButton(
-        tooltip: theme.isDark ? 'Switch to light mode' : 'Switch to dark mode',
+        tooltip:
+            theme.isDark ? 'Switch to light mode' : 'Switch to dark mode',
         onPressed: theme.toggleTheme,
         icon: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
@@ -162,7 +163,9 @@ class _ThemeToggle extends StatelessWidget {
             child: FadeTransition(opacity: anim, child: child),
           ),
           child: Icon(
-            theme.isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            theme.isDark
+                ? Icons.light_mode_outlined
+                : Icons.dark_mode_outlined,
             key: ValueKey(theme.isDark),
             color: AppColors.primary,
             size: 20,
@@ -181,7 +184,8 @@ class _Logo extends StatefulWidget {
   State<_Logo> createState() => _LogoState();
 }
 
-class _LogoState extends State<_Logo> with SingleTickerProviderStateMixin {
+class _LogoState extends State<_Logo>
+    with SingleTickerProviderStateMixin {
   bool _hover = false;
   late final AnimationController _c =
       AnimationController(vsync: this, duration: const Duration(seconds: 3))
@@ -300,8 +304,11 @@ class _NavLinkState extends State<_NavLink>
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),
                 style: TextStyle(
-                  color: active ? AppColors.primary : AppColors.textSecondary,
-                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  color: active
+                      ? AppColors.primary
+                      : AppColors.textSecondary,
+                  fontWeight:
+                      active ? FontWeight.w700 : FontWeight.w500,
                   fontSize: 14,
                   letterSpacing: active ? 0.3 : 0,
                 ),
