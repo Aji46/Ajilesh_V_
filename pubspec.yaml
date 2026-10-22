@@ -30,6 +30,7 @@ dependencies:
   google_fonts: ^8.2.1
   model_viewer_plus: ^1.10.0
   url_strategy: ^0.3.0
+  esen_seo: ^0.16.0
 
 dev_dependencies:
   flutter_test:
