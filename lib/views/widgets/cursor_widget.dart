@@ -107,12 +107,12 @@ class _CustomCursorOverlayState extends State<CustomCursorOverlay>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFF00B4D8).withValues(alpha: 0.7),
+                      color: AppColors.unique.withValues(alpha: 0.7),
                       width: 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF00B4D8).withValues(alpha: 0.25),
+                        color: AppColors.unique.withValues(alpha: 0.25),
                         blurRadius: 12,
                         spreadRadius: 2,
                       ),
@@ -134,13 +134,13 @@ class _CustomCursorOverlayState extends State<CustomCursorOverlay>
                     shape: BoxShape.circle,
                     gradient: const RadialGradient(
                       colors: [
-                        Color(0xFF00F5A0),
-                        Color(0xFF00B4D8),
+                        AppColors.uniqueLight,
+                        AppColors.unique,
                       ],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF00F5A0).withValues(alpha: 0.9),
+                        color: AppColors.unique.withValues(alpha: 0.9),
                         blurRadius: 14,
                         spreadRadius: 2,
                       ),
@@ -177,9 +177,8 @@ class _TrailPainter extends CustomPainter {
       final age = now.difference(trail[i].time).inMilliseconds;
       final ageFade = (1.0 - (age / 300.0)).clamp(0.0, 1.0);
 
-      final spectrum = AppColors.rgbSpectrum;
-      final from = spectrum[(i - 1) % (spectrum.length - 1)];
-      final to = spectrum[i % (spectrum.length - 1)];
+      const from = AppColors.unique;
+      const to = AppColors.uniqueLight;
       final paint = Paint()
         ..color = Color.lerp(
           from.withValues(alpha: 0),

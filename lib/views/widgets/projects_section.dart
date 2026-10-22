@@ -104,7 +104,7 @@ class _ProjectCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                FaIcon(FontAwesomeIcons.diagramProject,
+                const FaIcon(FontAwesomeIcons.diagramProject,
                     color: AppColors.accent, size: 18),
               ],
             ),
@@ -132,7 +132,7 @@ class _ProjectCard extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(top: 5),
                               child: Icon(Icons.circle,
                                   size: 5, color: AppColors.primary),
@@ -172,7 +172,7 @@ class _ProjectCard extends StatelessWidget {
                     ),
                     child: Text(
                       t,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontSize: 10.5,
                         fontWeight: FontWeight.w600,

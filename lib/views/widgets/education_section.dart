@@ -17,7 +17,6 @@ class EducationSection extends StatelessWidget {
     final portfolio = context.watch<PortfolioProvider>();
     final education = portfolio.education;
     final certificates = portfolio.certificates;
-    final mobile = Responsive.isMobile(context);
 
     return PhotoSectionBackground(
       imagePath: 'assets/images/wa9.jpeg',
@@ -39,7 +38,7 @@ class EducationSection extends StatelessWidget {
                   kicker: 'Background',
                   title: 'Education & Certificates',
                 ),
-                mobile
+                Responsive.isStacked(context)
                     ? Column(
                         children: [
                           _EducationColumn(education: education),
@@ -106,7 +105,7 @@ class _EducationColumn extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       education[i].institution,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.accent,
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
@@ -170,7 +169,7 @@ class _CertificatesColumn extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       certificates[i].issuer,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.accent,
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,

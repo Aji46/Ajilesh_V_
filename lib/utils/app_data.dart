@@ -30,12 +30,16 @@ class AppData {
     instagramUrl:
         'https://www.instagram.com/ajilesh_________?stkn=bHJ2dW12czV0NGFs&utm_source=qr',
     leetcodeUrl: 'https://leetcode.com/u/Aji46/',
-    profileImage: 'assets/images/wa9.jpeg',
+    profileImage: 'assets/images/wa4.jpeg',
     galleryImages: [
+      'assets/images/wa4.jpeg',
       'assets/images/wa9.jpeg',
       'assets/images/wa8.jpeg',
-      'assets/images/wa3.jpeg',
+      'assets/images/wa2.jpeg',
       'assets/images/wa7.jpeg',
+      'assets/images/wa3.jpeg',
+      'assets/images/wa1.jpeg',
+      'assets/images/wa6.jpeg',
     ],
   );
 

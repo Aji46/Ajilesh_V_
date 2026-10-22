@@ -1088,20 +1088,20 @@ class _HireMePageState extends State<HireMePage> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           color: AppColors.accent,
           width: 1.5,
         ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           color: Colors.redAccent,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           color: Colors.redAccent,
           width: 1.5,
         ),
@@ -1131,7 +1131,7 @@ class _HireMePageState extends State<HireMePage> {
 
     return PhotoSectionBackground(
       imagePath: 'assets/images/wa8.jpeg',
-      alignment: Alignment.topCenter,
+      alignment: const Alignment(0.0, -0.65),
       child: SizedBox(
         width: double.infinity,
         child: SafeArea(
@@ -1246,7 +1246,7 @@ class _HireMePageState extends State<HireMePage> {
               color: AppColors.accent.withValues(alpha: 0.25),
             ),
           ),
-          child: Row(
+          child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
@@ -1340,7 +1340,7 @@ class _HireMePageState extends State<HireMePage> {
                 ),
               ],
             ),
-            child: Icon(
+            child: const Icon(
               Icons.rocket_launch_rounded,
               color: Colors.white,
               size: 28,
@@ -1608,7 +1608,7 @@ class _HireMePageState extends State<HireMePage> {
                   size: 14,
                   color: AppColors.textMuted,
                 ),
-                SizedBox(width: 7),
+                const SizedBox(width: 7),
                 Flexible(
                   child: Text(
                     'The message will be sent through your email application.',

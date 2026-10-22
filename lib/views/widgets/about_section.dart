@@ -15,7 +15,6 @@ class AboutSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final portfolio = context.watch<PortfolioProvider>();
     final profile = portfolio.profile;
-    final mobile = Responsive.isMobile(context);
 
     final stats = [
       ('2+', 'Years\nExperience'),
@@ -55,7 +54,8 @@ class AboutSection extends StatelessWidget {
                   eyebrow: 'Life in frames',
                   title: 'Curiosity goes beyond the screen.',
                   description: 'A few moments from outside the editor.',
-                  imageAlignment: Alignment.topCenter,
+                  imageAlignment: Alignment(0.0, -0.65),
+                  fullHeightImage: true,
                 ),
 
                 // ── Stats row ────────────────────────────────────────────
@@ -74,7 +74,7 @@ class AboutSection extends StatelessWidget {
                 ),
 
                 // ── Content row ──────────────────────────────────────────
-                mobile
+                Responsive.isStacked(context)
                     ? Column(
                         children: [
                           _AboutText(profile: profile),

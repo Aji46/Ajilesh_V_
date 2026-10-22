@@ -6,6 +6,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/responsive.dart';
 import 'hover_scale.dart';
 import 'scroll_reveal.dart';
+import 'section_title.dart';
 import 'photo_section_background.dart';
 
 class ContactSection extends StatelessWidget {
@@ -52,7 +53,7 @@ class ContactSection extends StatelessWidget {
 
     return PhotoSectionBackground(
       imagePath: 'assets/images/wa4.jpeg',
-      alignment: Alignment.topCenter,
+      alignment: const Alignment(0.0, -0.32),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(
@@ -66,10 +67,10 @@ class ContactSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // const SectionTitle(
-                //   // kicker: 'Get In Touch',
-                //   // title: 'Let\'s Build Something Great',
-                // ),
+                const SectionTitle(
+                  kicker: 'Get In Touch',
+                  title: 'Let\'s Build Something Great',
+                ),
                 ScrollReveal(
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 620),

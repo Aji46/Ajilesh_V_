@@ -7,7 +7,6 @@ import '../../controllers/nav_provider.dart';
 import '../../controllers/portfolio_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/responsive.dart';
-import 'rgb_mesh_overlay.dart';
 
 class HeroSection extends StatefulWidget {
   const HeroSection({super.key});
@@ -248,12 +247,14 @@ class _HeroSectionState extends State<HeroSection>
           return Transform.translate(offset: Offset(0, dy), child: child);
         },
         child: _AvatarBlock(
-          imagePath: 'assets/images/wa9.jpeg',
+          imagePath: profile.profileImage,
           ringController: _ringController,
           glowController: _glowController,
         ),
       ),
     );
+
+    final isStacked = Responsive.isStacked(context);
 
     return SizedBox(
       width: double.infinity,
@@ -279,19 +280,12 @@ class _HeroSectionState extends State<HeroSection>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    const Color(0xFF0A0E1A).withValues(alpha: 0.97),
+                    const Color(0xFF0A0E1A).withValues(alpha: 0.96),
                     const Color(0xFF0A0E1A).withValues(alpha: 0.88),
-                    const Color(0xFF0A0E1A).withValues(alpha: 0.55),
+                    const Color(0xFF0A0E1A).withValues(alpha: 0.65),
                   ],
                 ),
               ),
-            ),
-          ),
-
-          // ── RGB mesh + dot pattern ───────────────────────────────
-          const Positioned.fill(
-            child: IgnorePointer(
-              child: RgbMeshOverlay(strength: 1.0),
             ),
           ),
 
@@ -302,13 +296,13 @@ class _HeroSectionState extends State<HeroSection>
             bottom: 0,
             height: 120,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    const Color(0xFF0A0E1A),
+                    Color(0xFF0A0E1A),
                   ],
                 ),
               ),
@@ -332,24 +326,24 @@ class _HeroSectionState extends State<HeroSection>
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: Responsive.pagePadding(context),
-              vertical: mobile ? 70 : 120,
+              vertical: mobile ? 60 : 110,
             ),
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                     maxWidth: Responsive.maxContentWidth(context)),
-                child: mobile
+                child: isStacked
                     ? Column(children: [
                         avatar,
-                        const SizedBox(height: 44),
-                        textColumn
+                        const SizedBox(height: 36),
+                        textColumn,
                       ])
                     : Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(flex: 6, child: textColumn),
-                          const SizedBox(width: 40),
-                          Expanded(flex: 4, child: Center(child: avatar)),
+                          const SizedBox(width: 48),
+                          Expanded(flex: 5, child: Center(child: avatar)),
                         ],
                       ),
               ),
@@ -395,8 +389,8 @@ class _ParticlePainter extends CustomPainter {
       final angle = (progress * p.speed + p.phase) * 2 * math.pi;
       final dx = p.x * size.width + math.sin(angle) * 18;
       final dy = p.y * size.height + math.cos(angle) * 14;
-      final hue = AppColors.rgbSpectrum[i % (AppColors.rgbSpectrum.length - 1)];
-      paint.color = hue.withValues(alpha: 0.22 + 0.18 * math.sin(angle));
+      paint.color =
+          AppColors.unique.withValues(alpha: 0.22 + 0.18 * math.sin(angle));
       canvas.drawCircle(Offset(dx, dy), p.radius, paint);
     }
   }
@@ -436,11 +430,11 @@ class _GlowBadge extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const _PulsingDot(),
-          const SizedBox(width: 8),
+          _PulsingDot(),
+          SizedBox(width: 8),
           Text(
             'Available for opportunities',
             style: TextStyle(
@@ -532,13 +526,20 @@ class _AvatarBlockState extends State<_AvatarBlock>
   double _glowY = 0.5; // specular highlight position Y (0..1)
 
   late final AnimationController _smoothController;
-  late Animation<double> _rotXAnim;
-  late Animation<double> _rotYAnim;
   double _targetX = 0;
   double _targetY = 0;
 
   bool _hover = false;
   final GlobalKey _key = GlobalKey();
+
+  Alignment _getProfileAlignment(String path) {
+    if (path.contains('wa4')) return const Alignment(0.0, -0.32);
+    if (path.contains('wa9')) return const Alignment(0.18, -0.42);
+    if (path.contains('wa8')) return const Alignment(0.0, -0.65);
+    if (path.contains('wa7')) return const Alignment(0.0, -0.28);
+    if (path.contains('wa1')) return const Alignment(0.0, -0.60);
+    return const Alignment(0.0, -0.35);
+  }
 
   @override
   void initState() {
@@ -586,7 +587,8 @@ class _AvatarBlockState extends State<_AvatarBlock>
 
   @override
   Widget build(BuildContext context) {
-    final sz = Responsive.isMobile(context) ? 230.0 : 330.0;
+    final sz = Responsive.avatarSize(context);
+    final showFloatingChips = MediaQuery.sizeOf(context).width >= 560;
 
     return MouseRegion(
       key: _key,
@@ -602,6 +604,7 @@ class _AvatarBlockState extends State<_AvatarBlock>
           ..rotateX(_rotX * math.pi / 180)
           ..rotateY(_rotY * math.pi / 180),
         child: Stack(
+          clipBehavior: Clip.none,
           alignment: Alignment.center,
           children: [
             // ── Spinning outer sweep ring ────────────────────────────
@@ -610,18 +613,18 @@ class _AvatarBlockState extends State<_AvatarBlock>
               builder: (_, __) => Transform.rotate(
                 angle: widget.ringController.value * 2 * math.pi,
                 child: Container(
-                  width: sz + 52,
-                  height: sz + 52,
+                  width: sz + 48,
+                  height: sz + 48,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: SweepGradient(
                       colors: [
-                        AppColors.rgbSpectrum[0].withValues(alpha: 0.0),
-                        AppColors.rgbSpectrum[1].withValues(alpha: 0.55),
-                        AppColors.rgbSpectrum[4].withValues(alpha: 0.5),
-                        AppColors.rgbSpectrum[6].withValues(alpha: 0.55),
-                        AppColors.rgbSpectrum[7].withValues(alpha: 0.45),
-                        AppColors.rgbSpectrum[0].withValues(alpha: 0.0),
+                        AppColors.unique.withValues(alpha: 0.0),
+                        AppColors.unique.withValues(alpha: 0.55),
+                        AppColors.uniqueLight.withValues(alpha: 0.5),
+                        AppColors.unique.withValues(alpha: 0.55),
+                        AppColors.uniqueDeep.withValues(alpha: 0.45),
+                        AppColors.unique.withValues(alpha: 0.0),
                       ],
                     ),
                   ),
@@ -635,8 +638,8 @@ class _AvatarBlockState extends State<_AvatarBlock>
               builder: (_, __) => Transform.rotate(
                 angle: -widget.ringController.value * 2 * math.pi * 0.7,
                 child: Container(
-                  width: sz + 26,
-                  height: sz + 26,
+                  width: sz + 24,
+                  height: sz + 24,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -652,21 +655,21 @@ class _AvatarBlockState extends State<_AvatarBlock>
             AnimatedBuilder(
               animation: widget.glowController,
               builder: (_, child) => Container(
-                width: sz + 10,
-                height: sz + 10,
+                width: sz + 8,
+                height: sz + 8,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.primary.withValues(
                           alpha: 0.28 + 0.22 * widget.glowController.value),
-                      blurRadius: 44 + 22 * widget.glowController.value,
-                      spreadRadius: 4,
+                      blurRadius: 40 + 20 * widget.glowController.value,
+                      spreadRadius: 3,
                     ),
                     BoxShadow(
                       color: AppColors.secondary.withValues(
                           alpha: 0.15 + 0.15 * widget.glowController.value),
-                      blurRadius: 64,
+                      blurRadius: 56,
                       spreadRadius: 2,
                     ),
                   ],
@@ -674,10 +677,10 @@ class _AvatarBlockState extends State<_AvatarBlock>
                 child: child,
               ),
               child: Container(
-                width: sz + 10,
-                height: sz + 10,
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
+                width: sz + 8,
+                height: sz + 8,
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: AppColors.accentGradient,
                 ),
@@ -685,14 +688,21 @@ class _AvatarBlockState extends State<_AvatarBlock>
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      // ── Photo ─────────────────────────────────────
-                      Image.asset(
-                        widget.imagePath,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Icon(
-                          Icons.person,
-                          size: 96,
-                          color: AppColors.textMuted,
+                      // ── Photo with zoom on hover ────────────────────
+                      AnimatedScale(
+                        scale: _hover ? 1.08 : 1.0,
+                        duration: const Duration(milliseconds: 350),
+                        curve: Curves.easeOutCubic,
+                        child: Image.asset(
+                          widget.imagePath,
+                          fit: BoxFit.cover,
+                          alignment: _getProfileAlignment(widget.imagePath),
+                          filterQuality: FilterQuality.high,
+                          errorBuilder: (_, __, ___) => Icon(
+                            Icons.person,
+                            size: 96,
+                            color: AppColors.textMuted,
+                          ),
                         ),
                       ),
 
@@ -708,7 +718,7 @@ class _AvatarBlockState extends State<_AvatarBlock>
                                 ),
                                 radius: 0.7,
                                 colors: [
-                                  Colors.white.withValues(alpha: 0.18),
+                                  Colors.white.withValues(alpha: 0.20),
                                   Colors.transparent,
                                 ],
                               ),
@@ -726,7 +736,7 @@ class _AvatarBlockState extends State<_AvatarBlock>
               animation: widget.ringController,
               builder: (_, __) {
                 final angle = widget.ringController.value * 2 * math.pi;
-                final r = (sz + 40) / 2;
+                final r = (sz + 34) / 2;
                 return Transform.translate(
                   offset: Offset(
                     r * math.cos(angle),
@@ -757,7 +767,7 @@ class _AvatarBlockState extends State<_AvatarBlock>
               builder: (_, __) {
                 final angle =
                     widget.ringController.value * 2 * math.pi + math.pi;
-                final r = (sz + 40) / 2;
+                final r = (sz + 34) / 2;
                 return Transform.translate(
                   offset: Offset(
                     r * math.cos(angle),
@@ -782,42 +792,134 @@ class _AvatarBlockState extends State<_AvatarBlock>
               },
             ),
 
-            // ── "Hover me" hint (disappears after first hover) ───────
-            if (!_hover)
-              Positioned(
-                bottom: 4,
-                child: AnimatedOpacity(
-                  opacity: _hover ? 0 : 0.6,
-                  duration: const Duration(milliseconds: 400),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceLight.withValues(alpha: 0.85),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.3)),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.mouse, size: 11, color: AppColors.primary),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Hover me',
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+            // ── "Open to Opportunities" status pill ──────────────────
+            Positioned(
+              bottom: -10,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0A0E1A),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: const Color(0xFF10B981).withValues(alpha: 0.65),
+                    width: 1.2,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                      blurRadius: 14,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF10B981),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF10B981),
+                            blurRadius: 6,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Open for Opportunities',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // ── Floating Tech Chip: Flutter Specialist (Top Right) ───
+            if (showFloatingChips)
+              const Positioned(
+                top: 4,
+                right: -24,
+                child: _FloatingTechChip(
+                  icon: FontAwesomeIcons.flutter,
+                  label: 'Flutter Dev',
+                  color: Color(0xFF02569B),
+                ),
+              ),
+
+            // ── Floating Tech Chip: Cyber Security (Bottom Left) ─────
+            if (showFloatingChips)
+              const Positioned(
+                bottom: 16,
+                left: -28,
+                child: _FloatingTechChip(
+                  icon: FontAwesomeIcons.shieldHalved,
+                  label: 'Ethical Hacker',
+                  color: Color(0xFF00B4D8),
                 ),
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _FloatingTechChip extends StatelessWidget {
+  final FaIconData icon;
+  final String label;
+  final Color color;
+
+  const _FloatingTechChip({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0A0E1A).withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: color.withValues(alpha: 0.5),
+          width: 1.2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.25),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FaIcon(icon, size: 13, color: color),
+          const SizedBox(width: 7),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -851,7 +953,7 @@ class _ScrollDownArrowState extends State<_ScrollDownArrow>
         offset: Offset(0, 5 * _c.value),
         child: child,
       ),
-      child: Opacity(
+      child: const Opacity(
         opacity: 0.6,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -865,7 +967,7 @@ class _ScrollDownArrowState extends State<_ScrollDownArrow>
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 22),
           ],
         ),
@@ -937,7 +1039,7 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-          transform: Matrix4.identity()..scale(_hover ? 1.05 : 1.0),
+          transform: Matrix4.diagonal3Values(_hover ? 1.05 : 1.0, _hover ? 1.05 : 1.0, 1.0),
           decoration: BoxDecoration(
             gradient: AppColors.accentGradient,
             borderRadius: BorderRadius.circular(14),
@@ -1003,7 +1105,7 @@ class _OutlineButtonState extends State<_OutlineButton> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-          transform: Matrix4.identity()..scale(_hover ? 1.05 : 1.0),
+          transform: Matrix4.diagonal3Values(_hover ? 1.05 : 1.0, _hover ? 1.05 : 1.0, 1.0),
           decoration: BoxDecoration(
             color: _hover
                 ? Colors.white.withValues(alpha: 0.1)
@@ -1069,7 +1171,7 @@ class _SocialIconState extends State<_SocialIcon> {
           duration: const Duration(milliseconds: 200),
           width: 46,
           height: 46,
-          transform: Matrix4.identity()..scale(_hover ? 1.18 : 1.0),
+          transform: Matrix4.diagonal3Values(_hover ? 1.18 : 1.0, _hover ? 1.18 : 1.0, 1.0),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: _hover ? AppColors.accentGradient : null,

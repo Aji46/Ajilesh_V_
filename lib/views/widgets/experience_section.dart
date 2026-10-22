@@ -42,7 +42,7 @@ class ExperienceSection extends StatelessWidget {
                   title: 'Learning through real work.',
                   description:
                       'Each role adds new perspective to how I build and solve problems.',
-                  imageAlignment: Alignment.topCenter,
+                  imageAlignment: Alignment(0.0, -0.60),
                   fullHeightImage: true,
                 ),
                 for (int i = 0; i < experience.length; i++)
@@ -141,7 +141,7 @@ class _TimelineItem extends StatelessWidget {
                       ),
                       child: Text(
                         duration,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -153,7 +153,7 @@ class _TimelineItem extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   company,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.accent,
                     fontSize: 14.5,
                     fontWeight: FontWeight.w600,
