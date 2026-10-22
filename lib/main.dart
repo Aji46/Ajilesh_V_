@@ -1,46 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'controllers/portfolio_provider.dart';
-// import 'controllers/nav_provider.dart';
-// import 'controllers/theme_provider.dart';
-// import 'utils/app_theme.dart';
-// import 'views/home_view.dart';
-
-// void main() {
-//   runApp(const AjileshPortfolioApp());
-// }
-
-// class AjileshPortfolioApp extends StatelessWidget {
-//   const AjileshPortfolioApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MultiProvider(
-//       providers: [
-//         ChangeNotifierProvider(create: (_) => PortfolioProvider()),
-//         ChangeNotifierProvider(create: (_) => NavProvider()),
-//         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-//       ],
-//       child: Consumer<ThemeProvider>(
-//         builder: (context, themeProvider, _) {
-//           return MaterialApp(
-//             title: 'Ajilesh V | Portfolio',
-//             debugShowCheckedModeBanner: false,
-//             theme: AppTheme.lightTheme,
-//             darkTheme: AppTheme.darkTheme,
-//             themeMode: themeProvider.isDark ? ThemeMode.dark : ThemeMode.light,
-//             home: const HomeView(),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -54,6 +14,33 @@ void main() => runApp(const PortfolioApp());
 
 const kBg = Color(0xFF0A0A0C);
 const kAcc = Color(0xFFFF5A36);
+
+/// Smoothed mouse position, -1..1 on both axes (0,0 = screen centre).
+/// Used by the extruded headlines. (Cards, chips and buttons use their own
+/// local hover position in Tilt3D.) The background does NOT use it.
+final ValueNotifier<Offset> gMouse = ValueNotifier<Offset>(Offset.zero);
+
+// ───────────────────────── IMAGE ASSETS (edit paths here) ─────────────────────────
+// Every image below is OPTIONAL. If a file is missing, the app falls back to
+// the code-drawn version, so nothing crashes while you add your pictures.
+class Pics {
+  // First scene
+  static const heroBg = 'assets/images/hero_bg.jpg'; // full-screen first image
+  static const portrait = 'assets/images/camera.jpg'; // photo of you
+
+  // Helicopter (transparent PNGs, helicopter facing RIGHT)
+  static const heliBody = 'assets/images/sky/heli_body.png';
+  static const heliRotor = 'assets/images/sky/heli_rotor.png'; // optional
+
+  // Building layers (transparent PNGs, bottom-aligned skyline)
+  static const cityFar = 'assets/images/sky/city_far.png';
+  static const cityMid = 'assets/images/sky/city_mid.png';
+  static const cityNear = 'assets/images/sky/city_near.png';
+
+  // Where the rotor sits on the helicopter image (fractions of image size)
+  static const rotorAnchor = Offset(.50, .10);
+  static const rotorWidthFrac = 1.0; // rotor image width / body image width
+}
 
 TextStyle disp(double s, {Color c = Colors.white}) =>
     GoogleFonts.bebasNeue(fontSize: s, color: c, height: .95, letterSpacing: 1);
@@ -69,6 +56,18 @@ Future<void> open(String url) async {
 }
 
 double c01(double v) => v < 0 ? 0 : (v > 1 ? 1 : v);
+
+/// Loads an asset as a raw image for the painter. Returns null if missing.
+Future<ui.Image?> loadUiImage(String asset) async {
+  try {
+    final data = await rootBundle.load(asset);
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final frame = await codec.getNextFrame();
+    return frame.image;
+  } catch (_) {
+    return null;
+  }
+}
 
 // ───────────────────────── animation widgets ─────────────────────────
 
@@ -163,6 +162,143 @@ class _RevealState extends State<Reveal> with SingleTickerProviderStateMixin {
   }
 }
 
+// ───────────────────────── 3D widgets ─────────────────────────
+
+/// Hover tilt in real 3D perspective, with a moving light glare.
+/// Wrap any card / photo in this and it leans toward the cursor.
+class Tilt3D extends StatefulWidget {
+  const Tilt3D({
+    super.key,
+    required this.child,
+    this.radius = 18,
+    this.max = .16, // max tilt in radians
+    this.lift = 1.035, // scale-up while hovered
+  });
+  final Widget child;
+  final double radius, max, lift;
+  @override
+  State<Tilt3D> createState() => _Tilt3DState();
+}
+
+class _Tilt3DState extends State<Tilt3D> {
+  Offset _o = Offset.zero; // -1..1 inside the widget
+  bool _in = false;
+
+  void _hover(PointerEvent e) {
+    final box = context.findRenderObject();
+    if (box is! RenderBox || !box.hasSize) return;
+    final sz = box.size;
+    if (sz.width < 1 || sz.height < 1) return;
+    setState(() {
+      _in = true;
+      _o = Offset(
+        ((e.localPosition.dx / sz.width) * 2 - 1).clamp(-1.0, 1.0).toDouble(),
+        ((e.localPosition.dy / sz.height) * 2 - 1).clamp(-1.0, 1.0).toDouble(),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onHover: _hover,
+      onExit: (_) => setState(() {
+        _in = false;
+        _o = Offset.zero;
+      }),
+      child: AnimatedScale(
+        scale: _in ? widget.lift : 1,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+        child: TweenAnimationBuilder<Offset>(
+          tween: Tween<Offset>(begin: Offset.zero, end: _o),
+          duration: const Duration(milliseconds: 160),
+          curve: Curves.easeOut,
+          child: widget.child,
+          builder: (_, o, child) {
+            final m = Matrix4.identity()
+              ..setEntry(3, 2, .0014)
+              ..rotateX(-o.dy * widget.max)
+              ..rotateY(o.dx * widget.max);
+            final glare = c01(o.distance * 1.2) * .16;
+            return Transform(
+              alignment: Alignment.center,
+              transform: m,
+              child: Stack(
+                fit: StackFit.passthrough,
+                clipBehavior: Clip.none,
+                children: [
+                  child!,
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(widget.radius),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: RadialGradient(
+                              center: Alignment(o.dx, o.dy),
+                              radius: .9,
+                              colors: [
+                                Colors.white.withOpacity(glare),
+                                Colors.transparent
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// Big headline with a stacked "extruded" 3D depth. The extrusion direction
+/// follows the mouse, like a light source moving around the letters.
+class Extruded extends StatelessWidget {
+  const Extruded(
+    this.text,
+    this.style, {
+    super.key,
+    this.depth = 9,
+    this.color = const Color(0xFF8A2A12),
+  });
+  final String text;
+  final TextStyle style;
+  final int depth;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<Offset>(
+      valueListenable: gMouse,
+      builder: (_, m, __) {
+        final dir = Offset(1.1 - m.dx * 1.6, 1.3 - m.dy * 1.2);
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            for (var i = depth; i >= 1; i--)
+              Transform.translate(
+                offset: dir * (i * 1.6),
+                child: Text(
+                  text,
+                  style: style.copyWith(
+                      color: Color.lerp(color, Colors.black, i / depth)),
+                ),
+              ),
+            Text(text, style: style),
+          ],
+        );
+      },
+    );
+  }
+}
+
 // ───────────────────────── app ─────────────────────────
 
 class PortfolioApp extends StatelessWidget {
@@ -190,6 +326,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   final _p = ValueNotifier<double>(0);
   final _focus = FocusNode();
   double _target = 0, _cur = 0;
+  Offset _mTarget = Offset.zero;
   Duration _last = Duration.zero;
   Timer? _snap;
   late final Ticker _tick;
@@ -209,12 +346,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   void _onTick(Duration d) {
-    final dt = (d - _last).inMicroseconds / 1e6;
+    final dt = ((d - _last).inMicroseconds / 1e6).clamp(0.0, .05).toDouble();
     _last = d;
+
+    // smooth the mouse so every 3D effect glides instead of jittering
+    final m = gMouse.value;
+    final nm = Offset.lerp(m, _mTarget, 1 - math.exp(-dt * 5))!;
+    if ((nm - m).distance > .0004) gMouse.value = nm;
+
     if (_cur == _target) return;
     _cur += (_target - _cur) * (1 - math.exp(-dt * 6));
     if ((_target - _cur).abs() < .0008) _cur = _target;
     _p.value = _cur;
+  }
+
+  void _setMouse(Offset p, Size s) {
+    if (s.width < 1 || s.height < 1) return;
+    _mTarget = Offset(
+      ((p.dx / s.width) * 2 - 1).clamp(-1.0, 1.0).toDouble(),
+      ((p.dy / s.height) * 2 - 1).clamp(-1.0, 1.0).toDouble(),
+    );
   }
 
   // Wheel / drag nudges the target; after a short pause it snaps to a scene.
@@ -269,6 +420,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             onPointerSignal: (e) {
               if (e is PointerScrollEvent) _nudge(e.scrollDelta.dy / 900);
             },
+            onPointerHover: (e) => _setMouse(e.localPosition, s),
+            onPointerMove: (e) => _setMouse(e.localPosition, s),
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onVerticalDragUpdate: (d) => _nudge(-d.delta.dy / s.height * 1.1),
@@ -289,7 +442,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     final flash = math.sin(f * math.pi);
     return Stack(children: [
       const SizedBox.expand(child: ColoredBox(color: kBg)),
-      // coding-themed parallax sky with scroll-driven helicopter
+      // parallax sky: real building images + helicopter (falls back to drawn)
       Positioned.fill(child: RepaintBoundary(child: CodeSky(progress: _p))),
       for (var i = 0; i < n; i++)
         if ((p - i).abs() < 1)
@@ -320,8 +473,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     ]);
   }
 
-  // The "zoom-through" transition: outgoing scene rushes toward the camera
-  // with motion blur, the next one zooms in from the distance.
+  // The 3D "zoom-through" transition: the outgoing scene swings and rushes
+  // toward the camera with motion blur, the next one flies in from the
+  // distance. (Mouse 3D lives only in the texts and widgets, not here.)
   Widget _fx(Widget child, double t) {
     double scale, blur, op;
     if (t >= 0) {
@@ -337,10 +491,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Widget w = SceneT(t: t, child: child);
     if (blur > .6) {
       w = ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: blur, sigmaY: blur), child: w);
+          imageFilter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+          child: w);
     }
-    w = Transform.rotate(
-        angle: t * .06, child: Transform.scale(scale: scale, child: w));
+    final mat = Matrix4.identity()
+      ..setEntry(3, 2, .0005)
+      ..rotateX(t * .12)
+      ..rotateY(t * .35)
+      ..scale(scale, scale, 1.0);
+    w = Transform(alignment: Alignment.center, transform: mat, child: w);
     return IgnorePointer(
         ignoring: t.abs() > .3, child: Opacity(opacity: op, child: w));
   }
@@ -425,7 +584,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 
   // Background image with parallax drift (scaled up so edges never show).
-  // `opacity` < 1 lets the code-sky + helicopter show through the photo.
+  // `opacity` < 1 lets the sky + helicopter show through the photo.
+  // If the asset is missing it simply draws nothing.
   Widget _bg(String asset, Alignment al,
           {bool leftFade = true, double opacity = 1}) =>
       Positioned.fill(
@@ -437,7 +597,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 depth: 90,
                 child: Opacity(
                   opacity: opacity,
-                  child: Image.asset(asset, fit: BoxFit.cover, alignment: al),
+                  child: Image.asset(
+                    asset,
+                    fit: BoxFit.cover,
+                    alignment: al,
+                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  ),
                 ),
               ),
             ),
@@ -477,41 +642,56 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           const SizedBox(height: 6),
           Reveal(
               delay: 90,
-              clip: true,
-              child: Text(title, style: disp(wide ? 92 : 54))),
+              dy: 40,
+              child: Extruded(title, disp(wide ? 92 : 54), depth: wide ? 7 : 5)),
           const SizedBox(height: 18),
         ],
       );
 
-  Widget _chip(String t) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-        decoration: BoxDecoration(
-          color: const Color(0x1AFFFFFF),
-          borderRadius: BorderRadius.circular(99),
-          border: Border.all(color: const Color(0x26FFFFFF)),
+  // Chip that tilts in 3D on hover.
+  Widget _chip(String t) => Tilt3D(
+        radius: 99,
+        max: .30,
+        lift: 1.08,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          decoration: BoxDecoration(
+            color: const Color(0x1AFFFFFF),
+            borderRadius: BorderRadius.circular(99),
+            border: Border.all(color: const Color(0x26FFFFFF)),
+          ),
+          child: Text(t, style: body(13, c: Colors.white)),
         ),
-        child: Text(t, style: body(13, c: Colors.white)),
       );
 
+  // Glass card that leans toward the mouse in 3D.
   Widget _card(Widget c, {double? w, int d = 0}) => Reveal(
         delay: d,
         dy: 60,
         scale: .94,
-        child: Container(
-          width: w,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: const Color(0x14FFFFFF),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: const Color(0x1FFFFFFF)),
+        child: Tilt3D(
+          radius: 18,
+          max: .12,
+          child: Container(
+            width: w,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0x14FFFFFF),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: const Color(0x1FFFFFFF)),
+              boxShadow: const [
+                BoxShadow(
+                    color: Color(0x55000000), blurRadius: 30, offset: Offset(0, 14))
+              ],
+            ),
+            child: c,
           ),
-          child: c,
         ),
       );
 
   Widget _btn(String l, String url, {bool filled = false}) {
     const pad = EdgeInsets.symmetric(horizontal: 20, vertical: 15);
-    return filled
+    final b = filled
         ? FilledButton(
             style: FilledButton.styleFrom(
                 backgroundColor: kAcc, foregroundColor: Colors.white, padding: pad),
@@ -524,20 +704,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 padding: pad),
             onPressed: () => open(url),
             child: Text(l));
+    // buttons lean toward the cursor in 3D
+    return Tilt3D(radius: 40, max: .25, lift: 1.06, child: b);
   }
 
-  Widget _photo(String a, double ratio, Alignment al) => Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(26),
-          boxShadow: const [
-            BoxShadow(color: Color(0x40FF5A36), blurRadius: 80, spreadRadius: -10)
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(26),
-          child: AspectRatio(
-            aspectRatio: ratio,
-            child: Image.asset(a, fit: BoxFit.cover, alignment: al),
+  // Photo with 3D hover tilt + glare.
+  Widget _photo(String a, double ratio, Alignment al) => Tilt3D(
+        radius: 26,
+        max: .10,
+        lift: 1.04,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(26),
+            boxShadow: const [
+              BoxShadow(color: Color(0x40FF5A36), blurRadius: 80, spreadRadius: -10)
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(26),
+            child: AspectRatio(
+              aspectRatio: ratio,
+              child: Image.asset(a, fit: BoxFit.cover, alignment: al),
+            ),
           ),
         ),
       );
@@ -585,10 +773,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             clip: true,
             child: Text('HELLO, I’M',
                 style: body(14, c: kAcc, w: FontWeight.w700, ls: 5))),
+        // 3D extruded name: depth follows the mouse
         Reveal(
             delay: 120,
-            clip: true,
-            child: Text('AJILESH V', style: disp(wide ? 170 : 84))),
+            dy: 60,
+            child: Extruded('AJILESH V', disp(wide ? 170 : 84),
+                depth: wide ? 10 : 6)),
         Reveal(
             delay: 260,
             clip: true,
@@ -623,10 +813,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       dy: 0,
       scale: .9,
       child: Parallax(
-          depth: 70,
-          child: _photo('assets/images/portrait.jpg', .78, Alignment.topCenter)),
+          depth: 70, child: _photo(Pics.portrait, .78, Alignment.topCenter)),
     );
     return Stack(fit: StackFit.expand, children: [
+      // full-screen first image (assets/images/hero_bg.jpg)
+      _bg(Pics.heroBg, Alignment.center, opacity: .55),
       _glow(),
       _frame(
         s,
@@ -673,7 +864,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
     return Stack(fit: StackFit.expand, children: [
       // semi-transparent photo so the sky + helicopter stay visible
-      _bg('assets/images/camera.jpg', const Alignment(.8, 0), opacity: .4),
+      _bg('assets/images/wa7.jpeg', const Alignment(.8, 0), opacity: .4),
       _frame(
         s,
         wide
@@ -727,7 +918,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       scale: .92,
       child: Parallax(
           depth: 60,
-          child: _photo('assets/images/bw.jpg', 1.2, Alignment.bottomCenter)),
+          child: _photo('assets/images/wa8.jpeg', 1.2, Alignment.topCenter)),
     );
     return Stack(fit: StackFit.expand, children: [
       _glow(),
@@ -811,7 +1002,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           int delay) =>
       _card(
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(t, style: disp(40)),
+          Extruded(t, disp(40), depth: 4),
           const SizedBox(height: 8),
           Text(d, style: body(14)),
           const SizedBox(height: 14),
@@ -899,10 +1090,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             delay: 100,
             clip: true,
             child: Text('READY TO TAKE', style: disp(wide ? 110 : 56))),
+        // 3D extruded accent headline
         Reveal(
             delay: 220,
-            clip: true,
-            child: Text('THE LEAP?', style: disp(wide ? 110 : 56, c: kAcc))),
+            dy: 50,
+            child: Extruded('THE LEAP?', disp(wide ? 110 : 56, c: kAcc),
+                depth: wide ? 9 : 6, color: const Color(0xFF5A1808))),
         const SizedBox(height: 18),
         Reveal(
             delay: 400,
@@ -953,10 +1146,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-// ───────────────────────── code sky + helicopter ─────────────────────────
+// ───────────────────────── sky: real images + helicopter ─────────────────────────
 
 class _SkyData {
   double p = 0, t = 0, rot = 0, vel = 0, dir = 1;
+  // loaded image assets (null = use the code-drawn fallback)
+  ui.Image? far, mid, near, heli, rotor;
 }
 
 class _Token {
@@ -983,6 +1178,7 @@ class _CodeSkyState extends State<CodeSky> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _loadImages();
     const words = [
       'async / await',
       'Widget build()',
@@ -1034,6 +1230,14 @@ class _CodeSkyState extends State<CodeSky> with SingleTickerProviderStateMixin {
       _time.value = _d.t; // triggers repaint every frame
     })
       ..start();
+  }
+
+  Future<void> _loadImages() async {
+    _d.far = await loadUiImage(Pics.cityFar);
+    _d.mid = await loadUiImage(Pics.cityMid);
+    _d.near = await loadUiImage(Pics.cityNear);
+    _d.heli = await loadUiImage(Pics.heliBody);
+    _d.rotor = await loadUiImage(Pics.heliRotor);
   }
 
   @override
@@ -1089,34 +1293,84 @@ class _SkyPainter extends CustomPainter {
       k.tp.paint(canvas, Offset(x - k.tp.width, y));
     }
 
-    _skyline(canvas, s,
-        seed: 1,
-        speed: .10,
-        minH: .16,
-        maxH: .38,
-        color: const Color(0xFF12131A),
-        windows: false);
-    _skyline(canvas, s,
-        seed: 2,
-        speed: .26,
-        minH: .12,
-        maxH: .30,
-        color: const Color(0xFF181A23),
-        windows: true);
+    // far buildings
+    if (d.far != null) {
+      _imgLayer(canvas, s, d.far!, speed: .10, heightFrac: .50, opacity: .75);
+    } else {
+      _skyline(canvas, s,
+          seed: 1,
+          speed: .10,
+          minH: .16,
+          maxH: .38,
+          color: const Color(0xFF12131A),
+          windows: false);
+    }
+
+    // middle buildings
+    if (d.mid != null) {
+      _imgLayer(canvas, s, d.mid!, speed: .26, heightFrac: .42, opacity: .9);
+    } else {
+      _skyline(canvas, s,
+          seed: 2,
+          speed: .26,
+          minH: .12,
+          maxH: .30,
+          color: const Color(0xFF181A23),
+          windows: true);
+    }
 
     _helicopter(canvas, s);
 
-    _skyline(canvas, s,
-        seed: 3,
-        speed: .55,
-        minH: .05,
-        maxH: .16,
-        color: const Color(0xFF0D0E13),
-        windows: false,
-        minW: 70,
-        maxW: 140);
+    // near buildings (in front of the helicopter)
+    if (d.near != null) {
+      _imgLayer(canvas, s, d.near!, speed: .55, heightFrac: .26);
+    } else {
+      _skyline(canvas, s,
+          seed: 3,
+          speed: .55,
+          minH: .05,
+          maxH: .16,
+          color: const Color(0xFF0D0E13),
+          windows: false,
+          minW: 70,
+          maxW: 140);
+    }
   }
 
+  /// Tiles a real building image across the screen, bottom-aligned, scrolling
+  /// at [speed]. Alternate tiles are mirrored so the loop never shows a seam.
+  void _imgLayer(Canvas canvas, Size s, ui.Image img,
+      {required double speed,
+      required double heightFrac,
+      double opacity = 1}) {
+    final h = s.height * heightFrac;
+    final scale = h / img.height;
+    final tw = img.width * scale;
+    if (tw < 4) return;
+    final shift = d.p * speed * s.width;
+    final first = (shift / tw).floor();
+    final src = Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble());
+    final paint = Paint()
+      ..filterQuality = FilterQuality.medium
+      ..color = Colors.white.withOpacity(opacity);
+    // start one tile early / end one tile late so mouse parallax never
+    // exposes an empty edge
+    for (var k = first - 1; k * tw - shift < s.width + 100; k++) {
+      final x = k * tw - shift;
+      final dst = Rect.fromLTWH(0, s.height - h, tw + 1, h);
+      canvas.save();
+      if (k.isOdd) {
+        canvas.translate(x + tw, 0);
+        canvas.scale(-1, 1);
+      } else {
+        canvas.translate(x, 0);
+      }
+      canvas.drawImageRect(img, src, dst, paint);
+      canvas.restore();
+    }
+  }
+
+  // Fallback: code-drawn skyline when no building image is provided.
   void _skyline(Canvas canvas, Size s,
       {required int seed,
       required double speed,
@@ -1129,14 +1383,14 @@ class _SkyPainter extends CustomPainter {
     final r = math.Random(seed);
     final paint = Paint()..color = color;
     final off = d.p * speed * s.width;
-    final limit = s.width * (1 + 5 * speed) + 200;
-    var x = 0.0;
+    final limit = s.width * (1 + 5 * speed) + 320;
+    var x = -120.0;
     var idx = 0;
     while (x < limit) {
       final bw = minW + r.nextDouble() * (maxW - minW);
       final bh = s.height * (minH + r.nextDouble() * (maxH - minH));
       final bx = x - off;
-      if (bx + bw > 0 && bx < s.width) {
+      if (bx + bw > -100 && bx < s.width + 100) {
         final rect = Rect.fromLTWH(bx, s.height - bh, bw, bh);
         canvas.drawRect(rect, paint);
         if (windows) {
@@ -1179,11 +1433,20 @@ class _SkyPainter extends CustomPainter {
     canvas.scale(k * d.dir, k);
     canvas.rotate(tilt);
 
-    // searchlight beam
+    if (d.heli != null) {
+      _imageHeli(canvas, h / k);
+    } else {
+      _paintedHeli(canvas, h / k);
+    }
+
+    canvas.restore();
+  }
+
+  void _beam(Canvas canvas, Offset from, double floorY) {
     final beam = Path()
-      ..moveTo(30, 16)
-      ..lineTo(260, h / k * .8)
-      ..lineTo(60, h / k * .8)
+      ..moveTo(from.dx, from.dy)
+      ..lineTo(from.dx + 230, floorY)
+      ..lineTo(from.dx + 30, floorY)
       ..close();
     canvas.drawPath(
       beam,
@@ -1192,8 +1455,86 @@ class _SkyPainter extends CustomPainter {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [kAcc.withOpacity(.22), Colors.transparent],
-        ).createShader(Rect.fromLTWH(30, 16, 230, h / k * .8)),
+        ).createShader(
+            Rect.fromLTWH(from.dx, from.dy, 230, floorY - from.dy)),
     );
+  }
+
+  // Real helicopter picture + animated rotor.
+  void _imageHeli(Canvas canvas, double floorY) {
+    final img = d.heli!;
+    const hw = 300.0; // helicopter width in local units
+    final hh = hw * img.height / img.width;
+    final body = Rect.fromCenter(center: Offset.zero, width: hw, height: hh);
+
+    _beam(canvas, Offset(hw * .22, hh * .30), floorY * .8);
+
+    // soft glow so a dark picture reads against the sky
+    canvas.drawOval(
+        Rect.fromCenter(center: Offset(0, hh * .05), width: hw * .9, height: hh * .9),
+        Paint()
+          ..color = kAcc.withOpacity(.07)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 30));
+
+    canvas.drawImageRect(
+      img,
+      Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
+      body,
+      Paint()..filterQuality = FilterQuality.medium,
+    );
+
+    // rotor position on the image
+    final anchor = Offset(
+      body.left + body.width * Pics.rotorAnchor.dx,
+      body.top + body.height * Pics.rotorAnchor.dy,
+    );
+
+    if (d.rotor != null) {
+      // Spinning rotor: squash horizontally + flicker, like blades passing.
+      final r = d.rotor!;
+      final rw = hw * Pics.rotorWidthFrac;
+      final rh = rw * r.height / r.width;
+      final c = math.cos(d.rot).abs();
+      canvas.save();
+      canvas.translate(anchor.dx, anchor.dy);
+      canvas.scale(.55 + .45 * c, 1);
+      canvas.drawImageRect(
+        r,
+        Rect.fromLTWH(0, 0, r.width.toDouble(), r.height.toDouble()),
+        Rect.fromCenter(center: Offset.zero, width: rw, height: rh),
+        Paint()
+          ..filterQuality = FilterQuality.medium
+          ..color = Colors.white.withOpacity(.55 + .4 * c),
+      );
+      canvas.restore();
+    } else {
+      // No rotor image: draw a spinning blade over the picture.
+      canvas.drawOval(
+          Rect.fromCenter(center: anchor, width: hw * .95, height: 6),
+          Paint()..color = Colors.white.withOpacity(.10));
+      final bl = hw * .47 * math.cos(d.rot);
+      canvas.drawLine(
+          Offset(anchor.dx - bl, anchor.dy),
+          Offset(anchor.dx + bl, anchor.dy),
+          Paint()
+            ..color = Colors.white54
+            ..strokeWidth = 2.5
+            ..strokeCap = StrokeCap.round);
+    }
+
+    // blinking nav light at the tail
+    final on = (math.sin(d.t * 6) > 0);
+    if (on) {
+      canvas.drawCircle(
+          Offset(body.left + body.width * .03, body.top + body.height * .30),
+          2.8,
+          Paint()..color = Colors.redAccent);
+    }
+  }
+
+  // Fallback: code-drawn helicopter.
+  void _paintedHeli(Canvas canvas, double floorY) {
+    _beam(canvas, const Offset(30, 16), floorY * .8);
 
     final body = Paint()..color = const Color(0xFF1D2028);
     final line = Paint()
@@ -1241,10 +1582,9 @@ class _SkyPainter extends CustomPainter {
 
     // mast + main rotor (spins faster when you scroll faster)
     canvas.drawLine(const Offset(0, -16), const Offset(0, -24), line);
-    final blur = Paint()..color = Colors.white.withOpacity(.10);
     canvas.drawOval(
         Rect.fromCenter(center: const Offset(0, -25), width: 150, height: 5),
-        blur);
+        Paint()..color = Colors.white.withOpacity(.10));
     final bl = 72 * math.cos(d.rot);
     canvas.drawLine(
         Offset(-bl, -25),
@@ -1269,8 +1609,6 @@ class _SkyPainter extends CustomPainter {
         Paint()..color = on ? Colors.redAccent : Colors.transparent);
     canvas.drawCircle(
         const Offset(36, 8), 2.5, Paint()..color = const Color(0xFF7CFFB2));
-
-    canvas.restore();
   }
 
   @override
