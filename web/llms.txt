@@ -1,0 +1,22 @@
+# Ajilesh V
+
+> Ajilesh V is a Flutter developer and cyber security researcher based in Wandoor, Malappuram, Kerala, India. Certified Ethical Hacker (EC-Council, 2022) and Certified Penetration Tester (RedTeam Hacker Academy, 2022). Available for Flutter mobile app development in Kerala and remotely.
+
+## Main pages
+
+- [Portfolio](https://ajilesh.in/): Flutter projects, skills, experience and contact details
+
+## Profiles
+
+- [GitHub](https://github.com/Aji46): Flutter source code and projects
+- [LinkedIn](https://www.linkedin.com/in/ajilesh-v-/): Professional profile
+- [LeetCode](https://leetcode.com/u/Aji46/): Problem-solving profile
+
+## Projects
+
+- [Quokart](https://www.amazon.in/Brototype-Quokart/dp/B0DKNRMM8C/): Used-product marketplace app (Flutter, Firebase, Provider, MVC)
+- [DropBlood](https://www.amazon.in/dp/B0DPTG9PWM/): Blood donation app with real-time updates and offline access (Flutter, Firebase, Hive)
+
+## Skills
+
+Dart, Flutter, Bloc, GetX, Provider, Firebase, Hive, sqflite, REST APIs, Git, Figma, penetration testing, ethical hacking
