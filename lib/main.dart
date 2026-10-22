@@ -5,12 +5,19 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
-void main() => runApp(const PortfolioApp());
+void main() { 
+    WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy(); // /projects instead of /#/projects
+  // Builds the semantics tree so screen readers and crawlers get real text
+  SemanticsBinding.instance.ensureSemantics();
+  runApp(const PortfolioApp());}
 
 const kBg = Color(0xFF0A0A0C);
 const kAcc = Color(0xFFFF5A36);
